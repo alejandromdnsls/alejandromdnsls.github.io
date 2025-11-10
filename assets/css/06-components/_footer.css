@@ -149,9 +149,29 @@
 }
 
 /* Iconos de contacto */
-.footer__links li svg {
-  color: var(--c-secondary);
-  opacity: 0.9;
+.footer__contact-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--ts-base);
+  color: rgba(255, 255, 255, 0.8);
+  transition: color var(--trans-fast);
+}
+
+.footer__contact-item:hover {
+  color: var(--c-accent);
+}
+
+.footer__contact-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color var(--trans-fast);
+}
+
+.footer__contact-item:hover svg {
+  color: var(--c-accent);
 }
 
 .footer__bottom {
