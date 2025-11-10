@@ -25,15 +25,31 @@
   cursor: not-allowed;
 }
 
-/* Primario (azul) */
+/* Primario (azul tecnológico) */
 .btn--primary {
-  background-color: var(--c-secondary);
+  background: var(--gradient-secondary);
   color: var(--c-contrast);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn--primary:hover::before {
+  left: 100%;
 }
 
 .btn--primary:hover:not(:disabled) {
-  background-color: var(--c-accent);
-  box-shadow: var(--shadow-hover);
+  box-shadow: var(--glow-hover);
   transform: translateY(-2px);
 }
 
@@ -41,17 +57,34 @@
   transform: translateY(0);
 }
 
-/* CTA (naranja) - alta visibilidad */
+/* CTA (electric blue) - máxima visibilidad */
 .btn--cta {
-  background-color: var(--c-cta);
+  background: var(--gradient-secondary);
   color: var(--c-contrast);
+  box-shadow: var(--glow-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn--cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.btn--cta:hover::before {
+  left: 100%;
 }
 
 .btn--cta:hover:not(:disabled) {
-  background-color: var(--c-cta-hover);
-  box-shadow: 0 8px 24px rgba(255, 122, 0, 0.25);
-  transform: translateY(-2px);
-  color: var(--c-primary);
+  box-shadow: var(--glow-hover);
+  transform: translateY(-3px);
+  filter: brightness(1.1);
 }
 
 .btn--cta:active:not(:disabled) {

@@ -52,7 +52,7 @@
 .form__textarea:focus,
 .form__select:focus {
   border-color: var(--c-accent);
-  box-shadow: 0 0 0 3px rgba(0, 202, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(38, 105, 251, 0.15);
 }
 
 .form__input::placeholder,
@@ -147,7 +147,7 @@
 }
 
 .form__status--loading {
-  background-color: rgba(0, 179, 250, 0.1);
+  background-color: rgba(38, 105, 251, 0.1);
   color: var(--c-secondary);
   border: 1px solid var(--c-secondary);
 }

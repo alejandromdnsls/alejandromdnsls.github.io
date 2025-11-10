@@ -29,8 +29,12 @@
 @import '06-components/_section.css';
 @import '06-components/_footer.css';
 @import '06-components/_tech-stack.css';
+@import '06-components/_services.css';
+@import '06-components/_portfolio.css';
+@import '06-components/_about.css';
 
 /* 07 - Utilities: utilidades y overrides */
 @import '07-utilities/_spacing.css';
 @import '07-utilities/_display.css';
 @import '07-utilities/_scopes.css';
+@import '07-utilities/_service-backgrounds.css';

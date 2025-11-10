@@ -1,0 +1,348 @@
+/**
+ * 07-utilities/_service-backgrounds.css
+ * Fondos decorativos para secciones de servicios
+ */
+
+/* Sección con patrón de puntos tecnológico */
+#cloud {
+  position: relative;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(2, 77, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 54, 222, 0.03) 0%, transparent 50%);
+  overflow: hidden;
+}
+
+[data-theme="dark"] #cloud {
+  background:
+    radial-gradient(circle at 20% 50%, rgba(38, 105, 251, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(101, 157, 248, 0.05) 0%, transparent 50%);
+}
+
+#cloud::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle, rgba(2, 77, 255, 0.15) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+[data-theme="dark"] #cloud::before {
+  background-image:
+    radial-gradient(circle, rgba(101, 157, 248, 0.2) 1px, transparent 1px);
+  opacity: 0.2;
+}
+
+#cloud::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 60%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(2, 77, 255, 0.08) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  animation: float-slow 20s ease-in-out infinite;
+}
+
+[data-theme="dark"] #cloud::after {
+  background: radial-gradient(circle, rgba(38, 105, 251, 0.12) 0%, transparent 70%);
+}
+
+/* Sección con líneas diagonales */
+#design {
+  position: relative;
+  background:
+    linear-gradient(135deg, rgba(2, 77, 255, 0.02) 0%, transparent 50%),
+    linear-gradient(-45deg, rgba(0, 54, 222, 0.02) 0%, transparent 50%);
+  overflow: hidden;
+}
+
+[data-theme="dark"] #design {
+  background:
+    linear-gradient(135deg, rgba(38, 105, 251, 0.05) 0%, transparent 50%),
+    linear-gradient(-45deg, rgba(101, 157, 248, 0.03) 0%, transparent 50%);
+}
+
+#design::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 35px,
+      rgba(2, 77, 255, 0.03) 35px,
+      rgba(2, 77, 255, 0.03) 37px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 35px,
+      rgba(2, 77, 255, 0.03) 35px,
+      rgba(2, 77, 255, 0.03) 37px
+    );
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+[data-theme="dark"] #design::before {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 35px,
+      rgba(101, 157, 248, 0.06) 35px,
+      rgba(101, 157, 248, 0.06) 37px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 35px,
+      rgba(101, 157, 248, 0.06) 35px,
+      rgba(101, 157, 248, 0.06) 37px
+    );
+  opacity: 0.3;
+}
+
+#design::after {
+  content: '';
+  position: absolute;
+  bottom: -30%;
+  left: -10%;
+  width: 50%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(2, 77, 255, 0.08) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  animation: float-slow 25s ease-in-out infinite reverse;
+}
+
+[data-theme="dark"] #design::after {
+  background: radial-gradient(circle, rgba(101, 157, 248, 0.12) 0%, transparent 70%);
+}
+
+/* Mejoras visuales para las cards dentro de estas secciones */
+#cloud .card--featured,
+#design .card--featured {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(2, 77, 255, 0.2);
+  box-shadow:
+    0 8px 32px rgba(2, 77, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+#cloud .card--featured h4,
+#design .card--featured h4 {
+  color: var(--c-primary);
+}
+
+#cloud .card--featured li,
+#design .card--featured li {
+  color: var(--c-text);
+}
+
+#cloud .card--featured strong,
+#design .card--featured strong {
+  color: var(--c-secondary);
+}
+
+[data-theme="dark"] #cloud .card--featured,
+[data-theme="dark"] #design .card--featured {
+  background: linear-gradient(135deg, rgba(12, 0, 49, 0.8), rgba(38, 105, 251, 0.15));
+  backdrop-filter: blur(10px);
+  border-color: rgba(101, 157, 248, 0.3);
+  box-shadow:
+    0 8px 32px rgba(38, 105, 251, 0.2),
+    inset 0 1px 0 rgba(101, 157, 248, 0.1);
+}
+
+[data-theme="dark"] #cloud .card--featured h4,
+[data-theme="dark"] #design .card--featured h4 {
+  color: var(--c-text);
+}
+
+[data-theme="dark"] #cloud .card--featured strong,
+[data-theme="dark"] #design .card--featured strong {
+  color: #659df8;
+}
+
+/* Efecto de brillo en hover para cards en estas secciones */
+#cloud .card--featured:hover,
+#design .card--featured:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 40px rgba(2, 77, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: var(--c-secondary);
+}
+
+[data-theme="dark"] #cloud .card--featured:hover,
+[data-theme="dark"] #design .card--featured:hover {
+  box-shadow:
+    0 12px 40px rgba(101, 157, 248, 0.3),
+    inset 0 1px 0 rgba(101, 157, 248, 0.2);
+  border-color: #659df8;
+}
+
+/* Animación flotante suave */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(5%, -5%) scale(1.05);
+  }
+  50% {
+    transform: translate(-3%, 3%) scale(0.95);
+  }
+  75% {
+    transform: translate(-5%, -3%) scale(1.02);
+  }
+}
+
+/* Mejora del contenido de texto en estas secciones */
+#cloud .o-grid > div:first-child,
+#design .o-grid > div:first-child {
+  position: relative;
+  z-index: 1;
+}
+
+/* Overline adaptado para fondos claros */
+#desarrollo .hero__overline,
+#cloud .hero__overline,
+#automatizacion-ia .hero__overline,
+#design .hero__overline {
+  background: var(--gradient-secondary);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4px 12px rgba(2, 77, 255, 0.3);
+}
+
+[data-theme="dark"] #desarrollo .hero__overline,
+[data-theme="dark"] #cloud .hero__overline,
+[data-theme="dark"] #automatizacion-ia .hero__overline,
+[data-theme="dark"] #design .hero__overline {
+  background: linear-gradient(135deg, #659df8, #2669fb);
+  box-shadow: 0 4px 12px rgba(101, 157, 248, 0.4);
+}
+
+/* Iconos decorativos sutiles */
+#cloud h2::before {
+  content: '☁';
+  position: absolute;
+  left: -40px;
+  font-size: 2rem;
+  opacity: 0.1;
+  color: var(--c-secondary);
+}
+
+[data-theme="dark"] #cloud h2::before {
+  color: #659df8;
+}
+
+#design h2::before {
+  content: '✨';
+  position: absolute;
+  left: -40px;
+  font-size: 2rem;
+  opacity: 0.1;
+  color: var(--c-secondary);
+}
+
+[data-theme="dark"] #design h2::before {
+  color: #659df8;
+}
+
+/* Iconos en cards de servicios */
+.card--featured li {
+  padding-left: var(--sp-5);
+  position: relative;
+}
+
+.card--featured li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-secondary);
+  border-radius: 50%;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .card--featured li::before {
+  background: linear-gradient(135deg, #659df8, #2669fb);
+}
+
+/* Estilos específicos para h4 en cards */
+.card--featured h4 {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 2px solid rgba(2, 77, 255, 0.1);
+}
+
+[data-theme="dark"] .card--featured h4 {
+  border-bottom-color: rgba(101, 157, 248, 0.2);
+}
+
+.card--featured h4::before {
+  content: '📋';
+  font-size: 1.5rem;
+}
+
+/* Iconos específicos por sección */
+#desarrollo .card--featured h4::before {
+  content: '💼';
+}
+
+#cloud .card--featured h4::before {
+  content: '🎯';
+}
+
+#automatizacion-ia .card--featured h4::before {
+  content: '🚀';
+}
+
+#design .card--featured h4::before {
+  content: '🎨';
+}
+
+/* Responsive: quitar iconos en móvil */
+@media (max-width: 767px) {
+  #cloud h2::before,
+  #design h2::before {
+    display: none;
+  }
+
+  #cloud::after,
+  #design::after {
+    width: 80%;
+    height: 100%;
+  }
+
+  .card--featured li {
+    padding-left: var(--sp-5);
+  }
+}

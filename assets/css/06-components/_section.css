@@ -94,6 +94,10 @@
   margin-bottom: var(--sp-3);
 }
 
+[data-theme="dark"] .cta-section__title {
+  color: #FFFFFF;
+}
+
 .cta-section__description {
   font-size: var(--ts-lg);
   color: var(--c-contrast);
@@ -101,6 +105,11 @@
   margin-bottom: var(--sp-4);
   max-width: 600px;
   margin-inline: auto;
+}
+
+[data-theme="dark"] .cta-section__description {
+  color: #FFFFFF;
+  opacity: 0.9;
 }
 
 .cta-section__actions {

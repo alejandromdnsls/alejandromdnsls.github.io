@@ -4,22 +4,35 @@
  */
 
 :root {
-  /* Colores de marca - Light Mode */
-  --c-primary: #001032;
-  --c-secondary: #00B3FA;
-  --c-accent: #00CAFF;
-  --c-cta: #FF7A00;
+  /* Colores de marca - Light Mode (Nueva paleta tecnológica) */
+  --c-primary: #0c0031;       /* Deep space blue */
+  --c-primary-dark: #040055;  /* Ultra dark blue */
+  --c-secondary: #024dff;     /* Electric blue */
+  --c-accent: #0036de;        /* Vibrant blue */
+  --c-cta: #024dff;           /* Electric blue CTA */
   --c-success: #00E676;
   --c-error: #FF4D4F;
-  --c-text: #4C4D4D;
-  --c-text-2: #9E9E9E;
-  --c-bg: #F5F5F5;
+  --c-text: #1a1a1a;
+  --c-text-2: #6B7280;
+  --c-bg: #FFFFFF;
+  --c-bg-alt: #F9FAFB;
   --c-contrast: #FFFFFF;
 
   /* Estados de hover/active */
-  --c-secondary-hover: #00CAFF;
-  --c-cta-hover: #FF8C1A;
-  --c-primary-alpha: rgba(0, 16, 50, 0.08);
+  --c-secondary-hover: #0036de;
+  --c-cta-hover: #0013a0;
+  --c-primary-alpha: rgba(2, 77, 255, 0.08);
+
+  /* Gradientes tecnológicos */
+  --gradient-primary: linear-gradient(135deg, #0c0031 0%, #040055 50%, #0013a0 100%);
+  --gradient-secondary: linear-gradient(135deg, #024dff 0%, #0036de 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(12, 0, 49, 0.95) 0%, rgba(4, 0, 85, 0.9) 50%, rgba(0, 19, 160, 0.85) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(2, 77, 255, 0.1) 0%, rgba(0, 54, 222, 0.05) 100%);
+
+  /* Sombras con color tecnológico */
+  --glow-primary: 0 0 20px rgba(2, 77, 255, 0.3);
+  --glow-secondary: 0 0 30px rgba(2, 77, 255, 0.4);
+  --glow-hover: 0 8px 32px rgba(2, 77, 255, 0.25);
 
   /* Espaciado */
   --sp-1: 8px;
@@ -52,16 +65,18 @@
   --lh-normal: 1.5;
   --lh-relaxed: 1.75;
 
-  /* Radios y sombras */
+  /* Radios modernos */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-xl: 24px;
 
-  --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-3: 0 6px 18px rgba(0, 0, 0, 0.10);
-  --shadow-hover: 0 8px 24px rgba(0, 179, 250, 0.20);
+  /* Sombras mejoradas */
+  --shadow-1: 0 2px 8px rgba(2, 77, 255, 0.08);
+  --shadow-2: 0 4px 16px rgba(2, 77, 255, 0.12);
+  --shadow-3: 0 8px 24px rgba(2, 77, 255, 0.15);
+  --shadow-hover: 0 12px 32px rgba(2, 77, 255, 0.20);
+  --shadow-card: 0 4px 20px rgba(12, 0, 49, 0.08);
 
   /* Transiciones */
   --trans-fast: 200ms ease;
@@ -80,26 +95,40 @@
 
 /* Dark Mode */
 [data-theme="dark"] {
-  /* Colores de marca - Dark Mode */
-  --c-primary: #0A1929;
-  --c-secondary: #00B3FA;
-  --c-accent: #00CAFF;
-  --c-cta: #FF8C1A;
+  /* Colores de marca - Dark Mode (Tecnológico con tonos claros) */
+  --c-primary: #0c0031;
+  --c-primary-dark: #000000;
+  --c-secondary: #2669fb;      /* Azul medio vibrante */
+  --c-accent: #659df8;         /* Azul claro */
+  --c-cta: #024dff;            /* Electric blue */
   --c-success: #00E676;
   --c-error: #FF6B6B;
-  --c-text: #E5E7EB;
-  --c-text-2: #9CA3AF;
-  --c-bg: #0F172A;
-  --c-contrast: #1E293B;
+  --c-text: #c1ddf8;           /* Celeste claro para texto */
+  --c-text-2: #659df8;         /* Azul claro para texto secundario */
+  --c-bg: #000000;
+  --c-bg-alt: #0c0031;
+  --c-contrast: #0c0031;
 
   /* Estados de hover/active */
-  --c-secondary-hover: #33C4FF;
-  --c-cta-hover: #FFA033;
-  --c-primary-alpha: rgba(255, 255, 255, 0.05);
+  --c-secondary-hover: #659df8;
+  --c-cta-hover: #2669fb;
+  --c-primary-alpha: rgba(2, 77, 255, 0.12);
+
+  /* Gradientes modo oscuro con nuevos colores */
+  --gradient-primary: linear-gradient(135deg, #000000 0%, #0c0031 50%, #040055 100%);
+  --gradient-secondary: linear-gradient(135deg, #024dff 0%, #2669fb 50%, #659df8 100%);
+  --gradient-hero: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(12, 0, 49, 0.9) 50%, rgba(4, 0, 85, 0.85) 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(38, 105, 251, 0.15) 0%, rgba(101, 157, 248, 0.08) 100%);
+
+  /* Resplandor más intenso con colores claros */
+  --glow-primary: 0 0 30px rgba(38, 105, 251, 0.5);
+  --glow-secondary: 0 0 40px rgba(101, 157, 248, 0.6);
+  --glow-hover: 0 12px 40px rgba(38, 105, 251, 0.4);
 
   /* Sombras ajustadas para modo oscuro */
-  --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-2: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-3: 0 6px 18px rgba(0, 0, 0, 0.5);
-  --shadow-hover: 0 8px 24px rgba(0, 179, 250, 0.25);
+  --shadow-1: 0 2px 8px rgba(2, 77, 255, 0.15);
+  --shadow-2: 0 4px 16px rgba(2, 77, 255, 0.20);
+  --shadow-3: 0 8px 24px rgba(2, 77, 255, 0.25);
+  --shadow-hover: 0 12px 32px rgba(2, 77, 255, 0.35);
+  --shadow-card: 0 4px 20px rgba(2, 77, 255, 0.20);
 }

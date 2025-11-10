@@ -4,35 +4,72 @@
  */
 
 .card {
-  background-color: var(--c-contrast);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-4);
-  box-shadow: var(--shadow-2);
+  background: var(--c-contrast);
+  border: 1px solid rgba(2, 77, 255, 0.1);
+  border-radius: var(--radius-xl);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-card);
   transition: all var(--trans-base);
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-secondary);
+  opacity: 0;
+  transition: opacity var(--trans-base);
 }
 
 .card:hover {
-  box-shadow: var(--shadow-3);
-  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-6px);
+  border-color: rgba(2, 77, 255, 0.3);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+[data-theme="dark"] .card {
+  background: var(--gradient-glass);
+  backdrop-filter: blur(10px);
+  border-color: rgba(2, 77, 255, 0.2);
+}
+
+[data-theme="dark"] .card:hover {
+  box-shadow: var(--glow-secondary);
 }
 
 .card__icon {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
-  border-radius: var(--radius-md);
-  margin-bottom: var(--sp-3);
+  background: var(--gradient-secondary);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--sp-4);
+  box-shadow: var(--glow-primary);
+  transition: all var(--trans-base);
+}
+
+.card:hover .card__icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: var(--glow-secondary);
 }
 
 .card__icon svg {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   fill: var(--c-contrast);
 }
 
