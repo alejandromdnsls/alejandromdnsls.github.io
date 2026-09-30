@@ -1,0 +1,28 @@
+---
+import Watermark from './Watermark.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  /** Optional breadcrumb-style link above the eyebrow. */
+  back?: { href: string; label: string };
+  /** Smaller title, for long headings such as case study names. */
+  compact?: boolean;
+}
+const { eyebrow, title, lead, back, compact = false } = Astro.props;
+---
+
+<header class="bg-brand-dark relative overflow-hidden text-white">
+  <Watermark on="dark" class="-bottom-24 -right-28 w-[26rem] opacity-[0.14] lg:-bottom-40 lg:-right-32 lg:w-[38rem]" />
+  <div class:list={['relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8', compact ? 'py-16 lg:py-24' : 'py-20 lg:py-28']}>
+    {back && (
+      <p class="mb-8 text-sm">
+        <a href={back.href} class="text-[var(--pv-sky)] underline underline-offset-4 hover:text-white">{back.label}</a>
+      </p>
+    )}
+    {eyebrow && <p class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">{eyebrow}</p>}
+    <h1 class:list={[compact ? 'text-headline mt-4 max-w-3xl' : 'text-display mt-4 max-w-4xl']}>{title}</h1>
+    {lead && <p class="mt-6 max-w-2xl text-lg text-[var(--pv-lilac)] lg:text-xl">{lead}</p>}
+  </div>
+</header>

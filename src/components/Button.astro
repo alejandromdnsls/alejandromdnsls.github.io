@@ -1,0 +1,31 @@
+---
+interface Props {
+  href?: string;
+  target?: string;
+  rel?: string;
+  variant?: 'primary' | 'secondary' | 'secondary-dark' | 'inverse';
+  type?: 'button' | 'submit';
+  class?: string;
+}
+const { href, target, rel, variant = 'primary', type = 'button', class: className = '' } = Astro.props;
+const base =
+  'inline-flex min-h-11 items-center justify-center rounded-md px-5 py-3 text-sm font-medium tracking-[0.01em] transition-colors duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-50';
+const variants = {
+  primary: 'bg-brand text-on-brand hover:bg-brand-hover',
+  secondary: 'border border-line-strong bg-transparent text-fg hover:border-brand hover:text-link-base',
+  // On always-dark sections (hero, dark bands): white outline, sky focus ring.
+  'secondary-dark':
+    'border border-[var(--pv-lilac-strong)] bg-transparent text-white hover:border-white focus-visible:outline-[var(--pv-sky)]',
+  // On the brand blue band: white button with ink text (19.69:1), ink text on white.
+  inverse: 'bg-white text-[var(--pv-ink)] hover:bg-[var(--pv-sky)] focus-visible:outline-white',
+} as const;
+const classes = [base, variants[variant], className];
+---
+
+{
+  href ? (
+    <a href={href} target={target} rel={rel} class:list={classes}><slot /></a>
+  ) : (
+    <button type={type} class:list={classes}><slot /></button>
+  )
+}

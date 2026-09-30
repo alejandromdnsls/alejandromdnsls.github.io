@@ -1,0 +1,21 @@
+---
+import Container from './Container.astro';
+
+interface Props {
+  id?: string;
+  tone?: 'default' | 'surface' | 'dark' | 'brand';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  class?: string;
+}
+const { id, tone = 'default', size = 'xl', class: className = '' } = Astro.props;
+const tones = {
+  default: 'bg-canvas text-fg',
+  surface: 'bg-panel text-fg',
+  dark: 'bg-brand-dark text-white',
+  brand: 'bg-[var(--pv-blue)] text-white',
+} as const;
+---
+
+<section id={id} data-reveal class:list={['relative overflow-hidden py-20 lg:py-28', tones[tone], className]}>
+  <Container size={size}><slot /></Container>
+</section>

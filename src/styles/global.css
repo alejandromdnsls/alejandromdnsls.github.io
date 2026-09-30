@@ -1,0 +1,145 @@
+@import "tailwindcss";
+@import "@fontsource/inter-tight/300.css";
+@import "@fontsource/inter-tight/400.css";
+@import "@fontsource/inter-tight/500.css";
+
+/* Brand tokens, synced from the workspace brand/tokens.css by scripts/sync-brand.sh. */
+@import "./brand-tokens.css";
+
+/* Theme toggle sets data-theme on <html>; dark utilities follow tokens, not classes. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Map brand tokens to Tailwind utilities. `inline` keeps var() references live
+   so light/dark switching works through the semantic tokens. */
+@theme inline {
+  --font-sans: var(--font-sans);
+
+  --color-canvas: var(--color-bg);
+  --color-panel: var(--color-surface);
+  --color-fg: var(--color-text);
+  --color-fg-muted: var(--color-text-muted);
+  --color-line: var(--color-border);
+  --color-line-strong: var(--color-border-strong);
+  --color-brand: var(--color-primary);
+  --color-brand-hover: var(--color-primary-hover);
+  --color-on-brand: var(--color-on-primary);
+  --color-link-base: var(--color-link);
+  --color-link-hover: var(--color-link-hover);
+  --color-ring: var(--color-focus-ring);
+
+  --color-ink: var(--pv-ink);
+  --color-navy: var(--pv-navy);
+  --color-sky: var(--pv-sky);
+  --color-lilac: var(--pv-lilac);
+  --color-ink-line: var(--pv-ink-line);
+  --color-blue-tint: var(--pv-blue-tint);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-light);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: var(--font-weight-regular);
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+  }
+
+  /* Logo variants: show the one that matches the active theme. */
+  .logo-on-dark { display: none; }
+  [data-theme="dark"] .logo-on-light { display: none; }
+  [data-theme="dark"] .logo-on-dark { display: inline-block; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo-on-light { display: none; }
+  :root:not([data-theme="light"]) .logo-on-dark { display: inline-block; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Type scale with presence (Inter Tight, tighter tracking on large sizes) */
+@layer components {
+  .text-display {
+    font-size: clamp(2.5rem, 6.4vw, 4.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+  .text-headline {
+    font-size: clamp(1.875rem, 3.8vw, 2.875rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+  /* Always-dark section: brandbook Base Oscura to Azul Sistema, flat, no overlays. */
+  .bg-brand-dark { background-image: var(--gradient-brand-dark); background-color: var(--pv-ink); }
+}
+
+/* Case study body (rendered markdown) */
+.case-body h2 {
+  font-size: 1.625rem;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+.case-body h2:first-child { margin-top: 0; }
+.case-body p { margin-top: 1rem; font-size: 1.125rem; color: var(--color-text-muted); max-width: 42rem; }
+.case-body ul { margin-top: 1rem; max-width: 42rem; list-style: none; border-top: 1px solid var(--color-border); }
+.case-body li { padding: 0.75rem 0; border-bottom: 1px solid var(--color-border); }
+
+/* Legal pages (long-form text) */
+.legal h2 { font-size: 1.375rem; margin-top: 2.5rem; margin-bottom: 0.75rem; }
+.legal h3 { font-size: 1.125rem; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.legal p, .legal li { font-size: 1rem; line-height: 1.7; }
+.legal p { margin-top: 0.75rem; }
+.legal ul, .legal ol { margin-top: 0.75rem; padding-left: 1.25rem; }
+.legal ul { list-style: disc; }
+.legal ol { list-style: decimal; }
+.legal li { margin-top: 0.25rem; }
+.legal a { color: var(--color-link); text-decoration: underline; text-underline-offset: 3px; }
+.legal a:hover { color: var(--color-link-hover); }
+.legal strong { font-weight: var(--font-weight-medium); }
+.legal table { width: 100%; margin-top: 1rem; border-collapse: collapse; font-size: 0.9375rem; }
+.legal th, .legal td { border: 1px solid var(--color-border); padding: 0.625rem 0.75rem; text-align: left; vertical-align: top; }
+.legal th { background: var(--color-surface); font-weight: var(--font-weight-medium); }
+
+/* Scroll reveal: hidden state exists only when JS added html.js-reveal (never under reduced motion). */
+html.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 320ms cubic-bezier(0.2, 0, 0, 1), transform 320ms cubic-bezier(0.2, 0, 0, 1);
+}
+html.js-reveal [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce), print {
+  html.js-reveal [data-reveal] { opacity: 1; transform: none; transition: none; }
+}

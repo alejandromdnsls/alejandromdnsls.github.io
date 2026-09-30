@@ -1,0 +1,46 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import FieldShell from './FieldShell.astro';
+import { controlClass } from './field';
+
+interface Props extends Omit<HTMLAttributes<'select'>, 'id' | 'class'> {
+  id: string;
+  name: string;
+  label: string;
+  options: readonly string[];
+  placeholder?: string;
+  hint?: string;
+  error?: string;
+  optional?: boolean;
+  class?: string;
+}
+const { id, label, options, placeholder, hint, error, optional, class: className, required, ...rest } = Astro.props;
+const describedBy = [hint && `${id}-hint`, `${id}-error`].filter(Boolean).join(' ');
+---
+
+<FieldShell {id} {label} {hint} {error} required={!!required} {optional} class={className}>
+  <div class="relative">
+    <!-- Native select keeps mobile pickers and keyboard behavior; chevron is drawn by us. -->
+    <select
+      {id}
+      {required}
+      class:list={[controlClass, 'cursor-pointer appearance-none pr-10']}
+      aria-describedby={describedBy}
+      aria-invalid={error ? 'true' : undefined}
+      {...rest}
+    >
+      {placeholder && <option value="">{placeholder}</option>}
+      {options.map((o) => <option value={o}>{o}</option>)}
+    </select>
+    <svg
+      class="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-fg-muted"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.75"
+      aria-hidden="true"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="m5 7.5 5 5 5-5" />
+    </svg>
+  </div>
+</FieldShell>

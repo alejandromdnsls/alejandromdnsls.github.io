@@ -1,0 +1,107 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import Button from './Button.astro';
+import Container from './Container.astro';
+import { schedulerLink } from '../data/site';
+
+const NAV_LINKS = [
+  { label: 'Inicio', href: '/' },
+  { label: 'Servicios', href: '/servicios' },
+  { label: 'Casos de estudio', href: '/casos' },
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Contacto', href: '/contacto' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const current = path.startsWith('/casos') ? '/casos' : path;
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-canvas">
+  <Container>
+    <div class="flex h-16 items-center justify-between lg:h-20">
+      <a href="/" class="inline-flex items-center" aria-label="Pyramidev, inicio">
+        <img src="/logo-light.png" alt="Pyramidev" width="600" height="95" class="logo-on-light h-7 w-auto lg:h-8" />
+        <img src="/logo-dark.png" alt="" width="600" height="95" class="logo-on-dark h-7 w-auto lg:h-8" aria-hidden="true" />
+      </a>
+
+      <nav aria-label="Principal" class="hidden lg:block">
+        <ul class="flex items-center gap-8">
+          {NAV_LINKS.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                aria-current={current === l.href ? 'page' : undefined}
+                class="text-sm font-medium text-fg-muted transition-colors duration-150 hover:text-fg aria-[current=page]:text-fg"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <ThemeToggle />
+        <Button {...schedulerLink} class="max-lg:hidden">Agenda una llamada</Button>
+        <button
+          type="button"
+          id="menu-toggle"
+          class="inline-flex size-11 items-center justify-center rounded-md text-fg lg:hidden"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          aria-label="Abrir menú"
+        >
+          <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path id="menu-open" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+            <path id="menu-close" class="hidden" stroke-linecap="round" d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </Container>
+
+  <div id="mobile-menu" class="hidden border-t border-line bg-canvas lg:hidden">
+    <Container>
+      <nav aria-label="Principal móvil" class="py-4">
+        <ul class="flex flex-col">
+          {NAV_LINKS.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                aria-current={current === l.href ? 'page' : undefined}
+                class="block py-3 text-base text-fg-muted hover:text-fg aria-[current=page]:text-fg"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <Button {...schedulerLink} class="mt-4 w-full">Agenda una llamada</Button>
+      </nav>
+    </Container>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const openIcon = document.getElementById('menu-open');
+  const closeIcon = document.getElementById('menu-close');
+
+  function setOpen(open: boolean) {
+    if (!btn || !menu) return;
+    menu.classList.toggle('hidden', !open);
+    openIcon?.classList.toggle('hidden', open);
+    closeIcon?.classList.toggle('hidden', !open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  }
+
+  btn?.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+</script>

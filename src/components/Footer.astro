@@ -1,0 +1,54 @@
+---
+import Container from './Container.astro';
+import { CONTACT, WHATSAPP_URL } from '../data/site';
+
+const year = new Date().getFullYear();
+const NAV_LINKS = [
+  { label: 'Servicios', href: '/servicios' },
+  { label: 'Casos de estudio', href: '/casos' },
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Contacto', href: '/contacto' },
+];
+const LEGAL_LINKS = [
+  { label: 'Aviso de privacidad', href: '/aviso-de-privacidad' },
+  { label: 'Términos y condiciones', href: '/terminos' },
+];
+const link = 'text-sm text-[var(--pv-lilac)] transition-colors duration-150 hover:text-white';
+---
+
+<footer class="border-t-4 border-navy bg-ink text-white">
+  <Container class="py-12 lg:py-16">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="lg:col-span-2">
+        <img src="/logo-dark.png" alt="Pyramidev" width="600" height="95" class="h-7 w-auto" />
+        <p class="mt-4 max-w-sm text-sm text-[var(--pv-lilac)]">
+          Software para operaciones críticas: estacionamientos, pagos, control de acceso y sistemas de punta a punta.
+        </p>
+      </div>
+
+      <nav aria-label="Secciones">
+        <h2 class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Sitio</h2>
+        <ul class="mt-4 space-y-2">
+          {NAV_LINKS.map((l) => <li><a class={link} href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div>
+        <h2 class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Contacto</h2>
+        <ul class="mt-4 space-y-2">
+          <li><a class={link} href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+          <li><a class={link} href={`tel:${CONTACT.phone.tel}`}>{CONTACT.phone.display}</a></li>
+          <li><a class={link} href={WHATSAPP_URL} target="_blank" rel="noopener">WhatsApp: {CONTACT.whatsapp.display}</a></li>
+          <li class="text-sm text-[var(--pv-lilac)]">{CONTACT.location}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col gap-4 border-t border-[var(--pv-ink-line)] pb-16 pt-6 sm:flex-row sm:pb-0 sm:pr-20 sm:items-center sm:justify-between">
+      <p class="text-sm text-[var(--pv-lilac)]">© {year} Pyramidev. Todos los derechos reservados.</p>
+      <ul class="flex gap-6">
+        {LEGAL_LINKS.map((l) => <li><a class={link} href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </div>
+  </Container>
+</footer>

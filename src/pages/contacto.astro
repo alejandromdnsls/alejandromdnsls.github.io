@@ -1,0 +1,171 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/Section.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Button from '../components/Button.astro';
+import Input from '../components/form/Input.astro';
+import Textarea from '../components/form/Textarea.astro';
+import Select from '../components/form/Select.astro';
+import Checkbox from '../components/form/Checkbox.astro';
+import { PROJECT_TYPES } from '../data/services';
+import { CONTACT, WHATSAPP_URL } from '../data/site';
+
+const FORM_ENDPOINT = 'https://formspree.io/f/mblzylqa';
+---
+
+<BaseLayout
+  title="Contacto | Pyramidev"
+  description="Cuéntanos qué necesitas resolver. Escríbenos a hola@pyramidev.com.mx, por WhatsApp, llámanos al +52 55 2190 2339 o usa el formulario."
+>
+  <Header slot="header" />
+
+  <PageHeader
+    eyebrow="Contacto"
+    title="Cuéntanos qué necesitas resolver"
+    lead="Escríbenos con el mayor detalle que puedas. Te respondemos por correo para agendar una llamada."
+  />
+
+  <Section size="lg">
+    <div class="grid gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-7">
+        <form id="contact-form" action={FORM_ENDPOINT} method="POST" novalidate class="space-y-6">
+          <Input id="nombre" name="nombre" label="Nombre" required autocomplete="name" />
+          <Input id="empresa" name="empresa" label="Empresa" autocomplete="organization" />
+          <Input id="email" name="email" type="email" label="Correo electrónico" required autocomplete="email" />
+          <Input id="telefono" name="telefono" type="tel" label="Teléfono" optional autocomplete="tel" />
+          <Select id="tipo" name="tipo_de_proyecto" label="Tipo de proyecto" placeholder="Selecciona una opción" options={PROJECT_TYPES} />
+          <Textarea
+            id="mensaje"
+            name="mensaje"
+            label="Mensaje"
+            required
+            rows={6}
+            hint="Qué proceso quieres mejorar, quién lo usa y para cuándo lo necesitas, si ya lo sabes."
+          />
+
+          <!-- Honeypot: hidden from people, bots tend to fill it. -->
+          <div class="sr-only" aria-hidden="true">
+            <label for="_gotcha">No llenes este campo</label>
+            <input id="_gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <Checkbox id="consentimiento" name="consentimiento" required>
+            He leído el <a href="/aviso-de-privacidad" class="text-link-base underline underline-offset-4 hover:text-link-hover">aviso de privacidad</a> y acepto que Pyramidev use mis datos para responder a esta solicitud.
+          </Checkbox>
+
+          <div id="form-status" role="status" aria-live="polite" class="text-base"></div>
+
+          <Button type="submit">Enviar mensaje</Button>
+        </form>
+      </div>
+
+      <aside class="lg:col-span-5" aria-label="Datos de contacto">
+        <div class="rounded-lg border border-line bg-panel p-6">
+          <h2 class="text-[1.375rem] leading-[1.3]">Datos de contacto</h2>
+          <dl class="mt-6 space-y-5">
+            <div>
+              <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Correo</dt>
+              <dd class="mt-1"><a href={`mailto:${CONTACT.email}`} class="text-link-base underline underline-offset-4 hover:text-link-hover">{CONTACT.email}</a></dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Teléfono</dt>
+              <dd class="mt-1"><a href={`tel:${CONTACT.phone.tel}`} class="text-link-base underline underline-offset-4 hover:text-link-hover">{CONTACT.phone.display}</a></dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">WhatsApp</dt>
+              <dd class="mt-1"><a href={WHATSAPP_URL} target="_blank" rel="noopener" class="text-link-base underline underline-offset-4 hover:text-link-hover">{CONTACT.whatsapp.display}</a></dd>
+            </div>
+            <div>
+              <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Ubicación</dt>
+              <dd class="mt-1">{CONTACT.location}</dd>
+            </div>
+          </dl>
+          <p class="mt-6 text-sm text-fg-muted">
+            Tratamos la información de tu proyecto como confidencial. Si necesitas un acuerdo de confidencialidad antes de platicar, pídelo en tu mensaje.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </Section>
+
+  <Footer slot="footer" />
+</BaseLayout>
+
+<script>
+  // Progressive enhancement: without JS the form posts normally to Formspree.
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+
+  function show(kind: 'ok' | 'error', text: string) {
+    if (!status) return;
+    status.textContent = text;
+    status.className = 'rounded-md border border-line-strong bg-panel p-4 text-fg';
+    status.dataset.kind = kind;
+  }
+
+  type Control = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+
+  function setError(control: Control, message: string | null) {
+    const holder = control.closest('[data-field]');
+    const box = holder?.querySelector<HTMLElement>('[data-error]');
+    const text = holder?.querySelector<HTMLElement>('[data-error-text]');
+    if (!box || !text) return;
+    if (message) {
+      text.textContent = message;
+      box.classList.remove('hidden');
+      box.classList.add('flex');
+      control.setAttribute('aria-invalid', 'true');
+    } else {
+      box.classList.add('hidden');
+      box.classList.remove('flex');
+      control.removeAttribute('aria-invalid');
+    }
+  }
+
+  function messageFor(control: Control): string {
+    if (control.validity.valueMissing) {
+      return control instanceof HTMLInputElement && control.type === 'checkbox'
+        ? 'Acepta el aviso de privacidad para poder enviar tu mensaje.'
+        : 'Este campo es obligatorio.';
+    }
+    if (control.validity.typeMismatch) return 'Escribe un correo válido, por ejemplo nombre@empresa.com.';
+    return 'Revisa este campo.';
+  }
+
+  form?.querySelectorAll<Control>('input, textarea, select').forEach((control) => {
+    control.addEventListener('input', () => {
+      if (control.getAttribute('aria-invalid') === 'true' && control.checkValidity()) setError(control, null);
+    });
+  });
+
+  form?.addEventListener('submit', async (event) => {
+    const controls = Array.from(form.querySelectorAll<Control>('input, textarea, select'));
+    controls.forEach((c) => setError(c, c.checkValidity() ? null : messageFor(c)));
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      show('error', 'Error: revisa los campos marcados antes de enviar.');
+      (form.querySelector(':invalid') as HTMLElement | null)?.focus();
+      return;
+    }
+    event.preventDefault();
+    const submit = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    if (submit) submit.disabled = true;
+    show('ok', 'Enviando…');
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      show('ok', 'Listo: recibimos tu mensaje. Te respondemos por correo.');
+    } catch {
+      show('error', 'Error: no pudimos enviar tu mensaje. Inténtalo de nuevo o escríbenos a hola@pyramidev.com.mx.');
+    } finally {
+      if (submit) submit.disabled = false;
+    }
+  });
+</script>

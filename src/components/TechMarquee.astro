@@ -1,0 +1,77 @@
+---
+import { TECH } from '../data/tech';
+---
+
+<!--
+  CSS-only marquee. The second list is a visual duplicate for the loop (aria-hidden, not focusable).
+  Pauses on hover/focus; with prefers-reduced-motion it becomes a static wrapping grid.
+-->
+<div class="tech-marquee" role="group" aria-label="Tecnologías con las que trabajamos">
+  <div class="tech-track">
+    {[0, 1].map((copy) => (
+      <ul class="tech-list" aria-hidden={copy === 1 ? 'true' : undefined} data-copy={copy}>
+        {TECH.map((t) => (
+          <li class="tech-item">
+            {t.path && (
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d={t.path} /></svg>
+            )}
+            {t.svg && <span class="tech-svg" set:html={t.svg} />}
+            <span class:list={{ 'sr-only': t.iconOnly }}>{t.name}</span>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tech-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .tech-track {
+    display: flex;
+    width: max-content;
+    animation: tech-scroll 48s linear infinite;
+  }
+  .tech-marquee:hover .tech-track,
+  .tech-marquee:focus-within .tech-track {
+    animation-play-state: paused;
+  }
+  .tech-list {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 3.5rem;
+    padding-right: 3.5rem;
+    margin: 0;
+    list-style: none;
+  }
+  .tech-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-text-muted);
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-regular);
+    white-space: nowrap;
+  }
+  .tech-item svg,
+  .tech-svg :global(svg) {
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+  }
+  .tech-svg { display: inline-flex; }
+  @keyframes tech-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tech-marquee { -webkit-mask-image: none; mask-image: none; }
+    .tech-track { animation: none; width: auto; }
+    .tech-list { flex-wrap: wrap; gap: 1.5rem 2.5rem; padding-right: 0; }
+    .tech-list[data-copy='1'] { display: none; }
+  }
+</style>

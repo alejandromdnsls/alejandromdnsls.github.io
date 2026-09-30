@@ -1,0 +1,29 @@
+---
+import Section from './Section.astro';
+import Button from './Button.astro';
+import { schedulerLink } from '../data/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+  label?: string;
+}
+const {
+  title = 'Cuéntanos qué necesitas resolver',
+  text = 'Platicamos unos minutos, entendemos tu operación y te proponemos un plan de trabajo con alcance y tiempos.',
+  label = 'Agenda una llamada',
+} = Astro.props;
+---
+
+<!-- Brand blue band; the footer below is Base Oscura so the two never merge. White text on blue is 5.94:1. -->
+<Section tone="brand" size="xl" class="py-16 lg:py-20">
+  <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+    <div class="max-w-2xl">
+      <h2 class="text-headline">{title}</h2>
+      <p class="mt-4 text-lg text-white">{text}</p>
+    </div>
+    <div class="shrink-0">
+      <Button {...schedulerLink} variant="inverse" class="px-7 py-4 text-base">{label}</Button>
+    </div>
+  </div>
+</Section>

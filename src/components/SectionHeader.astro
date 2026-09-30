@@ -1,0 +1,18 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  tone?: 'light' | 'dark';
+}
+const { eyebrow, title, lead, tone = 'light' } = Astro.props;
+const dark = tone === 'dark';
+---
+
+<div class="max-w-3xl">
+  {eyebrow && (
+    <p class:list={['text-xs font-medium uppercase tracking-[0.08em]', dark ? 'text-[var(--pv-sky)]' : 'text-link-base']}>{eyebrow}</p>
+  )}
+  <h2 class="text-headline mt-3">{title}</h2>
+  {lead && <p class:list={['mt-5 max-w-2xl text-lg', dark ? 'text-[var(--pv-lilac)]' : 'text-fg-muted']}>{lead}</p>}
+</div>

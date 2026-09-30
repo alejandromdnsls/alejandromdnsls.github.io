@@ -1,0 +1,52 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  images: { src: ImageMetadata; alt: string }[];
+}
+const { images } = Astro.props;
+const isLandscape = (src: ImageMetadata) => src.width > src.height;
+const landscape = images.filter((i) => isLandscape(i.src));
+const portrait = images.filter((i) => !isLandscape(i.src));
+---
+
+{images.length > 0 && (
+  <div class="space-y-6">
+    {landscape.map((img) => (
+      <figure class="overflow-hidden rounded-lg border border-line bg-canvas">
+        <div class="flex items-center gap-1.5 border-b border-line bg-panel px-4 py-2.5" aria-hidden="true">
+          <span class="size-2.5 rounded-full bg-line-strong opacity-40"></span>
+          <span class="size-2.5 rounded-full bg-line-strong opacity-40"></span>
+          <span class="size-2.5 rounded-full bg-line-strong opacity-40"></span>
+        </div>
+        <Picture
+          src={img.src}
+          alt={img.alt}
+          widths={[480, 720, 960, 1280]}
+          sizes="(min-width: 1024px) 720px, 100vw"
+          formats={['avif', 'webp']}
+          class="block h-auto w-full"
+          loading="lazy"
+        />
+      </figure>
+    ))}
+    {portrait.length > 0 && (
+      <div class="grid max-w-xl grid-cols-2 gap-4 sm:gap-6">
+        {portrait.map((img) => (
+          <figure class="overflow-hidden rounded-lg border border-line bg-canvas">
+            <Picture
+              src={img.src}
+              alt={img.alt}
+              widths={[240, 360, 414, 640]}
+              sizes="(min-width: 640px) 280px, 45vw"
+              formats={['avif', 'webp']}
+              class="block h-auto w-full"
+              loading="lazy"
+            />
+          </figure>
+        ))}
+      </div>
+    )}
+  </div>
+)}

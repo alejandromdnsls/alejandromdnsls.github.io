@@ -1,0 +1,121 @@
+---
+import '../styles/global.css';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import { ANALYTICS, CONTACT, SITE_URL } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const SITE_NAME = 'Pyramidev';
+const {
+  title = 'Pyramidev | Software para operaciones críticas',
+  description = 'Desarrollamos software para operaciones críticas: estacionamientos, pagos, control de acceso y sistemas de operación de punta a punta. CDMX.',
+  ogImage = '/og-image.png',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE_NAME,
+  url: SITE_URL,
+  logo: new URL('/logo-light.png', Astro.site).href,
+  legalName: 'Pyramidev Technologies S.A. de C.V.',
+  taxID: 'PTE260206DH3',
+  email: CONTACT.email,
+  telephone: CONTACT.phone.display,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Juan Cousin 136, Col. Sacramento',
+    addressLocality: 'Ciudad de México',
+    addressRegion: 'CDMX',
+    postalCode: '01420',
+    addressCountry: 'MX',
+  },
+};
+---
+
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="facebook-domain-verification" content="z0mfi2mv1bytoane8azfpl7fypxmlq" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logotipo de Pyramidev" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0033" media="(prefers-color-scheme: dark)" />
+
+    <!-- Apply stored theme before paint to avoid a flash. -->
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {}
+    </script>
+
+    <!-- Scroll reveal is opt-in: content stays visible unless JS adds html.js-reveal (never under reduced motion). -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        d.classList.add('js-reveal');
+        addEventListener('DOMContentLoaded', function () {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) { e.target.classList.add('is-revealed'); io.unobserve(e.target); }
+            });
+          }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+          document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+        });
+      })();
+    </script>
+
+    {ANALYTICS.cloudflareToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: ANALYTICS.cloudflareToken })}></script>
+    )}
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-on-brand"
+    >
+      Saltar al contenido
+    </a>
+    <slot name="header" />
+    <main id="contenido" class="flex-1">
+      <slot />
+    </main>
+    <slot name="footer" />
+    <WhatsAppButton />
+  </body>
+</html>

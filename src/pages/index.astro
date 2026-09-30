@@ -1,0 +1,139 @@
+---
+import { getPublishedCases, sortCases } from '../lib/cases';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/Section.astro';
+import { schedulerLink } from '../data/site';
+import Button from '../components/Button.astro';
+import CaseCard from '../components/CaseCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Watermark from '../components/Watermark.astro';
+import TechMarquee from '../components/TechMarquee.astro';
+import { SERVICES } from '../data/services';
+
+const featured = sortCases(await getPublishedCases((c) => c.data.featured));
+
+const headline = SERVICES.find((s) => s.headline)!;
+const specialties = SERVICES.filter((s) => !s.headline);
+
+const STEPS = [
+  { title: 'Entender', text: 'Platicamos con quienes operan el proceso hoy. Vemos cómo se hace, dónde se pierde tiempo y qué no puede fallar.' },
+  { title: 'Proponer', text: 'Te entregamos un alcance por etapas, con tiempos y costo para cada una. Empezamos por lo que más valor da.' },
+  { title: 'Construir', text: 'Entregamos por etapas, para que puedas probar cada avance con tu equipo y corregir a tiempo.' },
+  { title: 'Acompañar', text: 'Ponemos el sistema en operación, capacitamos a tu equipo y seguimos disponibles para soporte y mejoras.' },
+];
+---
+
+<BaseLayout>
+  <Header slot="header" />
+
+  <section class="bg-brand-dark relative overflow-hidden text-white">
+    <Watermark on="dark" class="-bottom-32 -right-24 w-[30rem] opacity-[0.16] sm:w-[38rem] lg:-bottom-56 lg:-right-28 lg:w-[56rem]" />
+    <div class="relative mx-auto w-full max-w-6xl px-4 pb-16 pt-20 sm:px-6 lg:px-8 lg:pb-20 lg:pt-32">
+      <p class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Desarrollo de software a la medida · CDMX</p>
+      <h1 class="text-display mt-5 max-w-4xl">Software a la medida para operaciones que no pueden detenerse.</h1>
+      <p class="mt-7 max-w-2xl text-lg text-[var(--pv-lilac)] lg:text-xl">
+        Diseñamos y construimos sistemas para tu proceso: estacionamientos, pagos, control de acceso y operación de punta a punta. Trabajamos sobre todo con aeropuertos en México y gobierno, donde cada cifra tiene que cuadrar.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <Button {...schedulerLink} class="px-7 py-4 text-base">Agenda una llamada</Button>
+        <Button href="/casos" variant="secondary-dark" class="px-7 py-4 text-base">Ver casos de estudio</Button>
+      </div>
+      <p class="mt-16 border-t border-[var(--pv-ink-line)] pt-5 text-sm font-medium text-[var(--pv-sky)] lg:mt-24">
+        Aeropuertos en México <span aria-hidden="true">·</span><span class="sr-only">,</span> Gobierno <span aria-hidden="true">·</span><span class="sr-only">,</span> Estacionamientos <span aria-hidden="true">·</span><span class="sr-only">y</span> Industria
+      </p>
+    </div>
+  </section>
+
+  <Section>
+    <SectionHeader
+      eyebrow="Servicios"
+      title="Qué hacemos"
+      lead="Desarrollamos software a la medida y nos especializamos en cinco áreas. Cada una se puede contratar por separado o combinarse en un mismo proyecto."
+    />
+
+    <a
+      href={`/servicios#${headline.slug}`}
+      class="bg-brand-dark group relative mt-12 block overflow-hidden rounded-lg p-8 text-white sm:p-10 lg:p-12"
+    >
+      <Watermark on="dark" class="-bottom-16 -right-12 w-[20rem] opacity-[0.14] lg:-bottom-28 lg:w-[30rem]" />
+      <div class="relative max-w-2xl">
+        <p class="text-sm font-medium text-[var(--pv-sky)]" aria-hidden="true">01</p>
+        <h3 class="text-headline mt-3">{headline.title}</h3>
+        <p class="mt-4 text-lg text-[var(--pv-lilac)]">{headline.short}</p>
+        <p class="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white underline decoration-[var(--pv-blue-tint)] decoration-2 underline-offset-8">
+          Conocer el servicio
+          <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 10h12m-5-5 5 5-5 5" /></svg>
+        </p>
+      </div>
+    </a>
+
+    <ol class="mt-6 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+      {specialties.map((s, i) => (
+        <li class="bg-canvas p-7">
+          <p class="text-[2rem] leading-none tracking-[-0.02em] text-brand" aria-hidden="true">{String(i + 2).padStart(2, '0')}</p>
+          <h3 class="mt-5 text-[1.375rem] leading-[1.3]">{s.title}</h3>
+          <p class="mt-3 text-fg-muted">{s.short}</p>
+        </li>
+      ))}
+      <li class="flex items-end bg-panel p-7">
+        <a href="/servicios" class="text-sm font-medium text-link-base underline underline-offset-4 hover:text-link-hover">Ver detalle de cada servicio</a>
+      </li>
+    </ol>
+  </Section>
+
+  <Section tone="surface" size="xl" class="py-16 lg:py-20">
+    <SectionHeader eyebrow="Tecnologías" title="Herramientas probadas, explicadas sin tecnicismos" />
+    <div class="mt-10">
+      <TechMarquee />
+    </div>
+  </Section>
+
+  <Section>
+    <SectionHeader
+      eyebrow="Casos de estudio"
+      title="Trabajo reciente"
+      lead="Por acuerdos de confidencialidad no publicamos el nombre de todos nuestros clientes. Describimos el trabajo sin identificar a quien lo contrató."
+    />
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {featured.map((entry) => <CaseCard entry={entry} />)}
+    </div>
+    <p class="mt-8">
+      <a href="/casos" class="text-sm font-medium text-link-base underline underline-offset-4 hover:text-link-hover">Ver todos los casos</a>
+    </p>
+  </Section>
+
+  <Section tone="dark">
+    <Watermark on="dark" class="-bottom-40 -left-40 hidden w-[36rem] opacity-[0.08] lg:block" />
+    <div class="relative">
+      <SectionHeader eyebrow="Cómo trabajamos" title="Cuatro pasos, sin sorpresas" tone="dark" />
+      <ol class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {STEPS.map((s, i) => (
+          <li class="border-t border-[var(--pv-lilac-strong)] pt-5">
+            <p class="text-[2.5rem] leading-none tracking-[-0.02em] text-[var(--pv-blue-tint)]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="mt-5 text-[1.375rem] leading-[1.3]">{s.title}</h3>
+            <p class="mt-3 text-[var(--pv-lilac)]">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </Section>
+
+  <Section tone="surface" size="lg">
+    <div class="grid gap-8 lg:grid-cols-3">
+      <div class="lg:col-span-1">
+        <h2 class="text-headline">Experiencia y confidencialidad</h2>
+      </div>
+      <div class="space-y-4 text-lg text-fg-muted lg:col-span-2">
+        <p>Somos un equipo con más de 10 años desarrollando software. Trabajamos con pocos clientes y en proyectos grandes, principalmente en aeropuertos de México y gobierno.</p>
+        <p>Por acuerdos de confidencialidad no publicamos el nombre de todos nuestros clientes. Lo que sí podemos hacer es explicarte con detalle cómo resolvimos problemas parecidos al tuyo.</p>
+      </div>
+    </div>
+  </Section>
+
+  <CtaBand />
+
+  <Footer slot="footer" />
+</BaseLayout>

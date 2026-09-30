@@ -1,0 +1,28 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import FieldShell from './FieldShell.astro';
+import { controlClass } from './field';
+
+interface Props extends Omit<HTMLAttributes<'input'>, 'id' | 'class'> {
+  id: string;
+  name: string;
+  label: string;
+  hint?: string;
+  error?: string;
+  optional?: boolean;
+  class?: string;
+}
+const { id, label, hint, error, optional, class: className, required, ...rest } = Astro.props;
+const describedBy = [hint && `${id}-hint`, `${id}-error`].filter(Boolean).join(' ');
+---
+
+<FieldShell {id} {label} {hint} {error} required={!!required} {optional} class={className}>
+  <input
+    {id}
+    {required}
+    class={controlClass}
+    aria-describedby={describedBy}
+    aria-invalid={error ? 'true' : undefined}
+    {...rest}
+  />
+</FieldShell>

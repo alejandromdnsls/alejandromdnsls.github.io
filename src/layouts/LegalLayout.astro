@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Container from '../components/Container.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  updated: string;
+}
+const { title, description, heading, updated } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <Header slot="header" />
+  <Container size="md" class="py-16 lg:py-24">
+    <h1 class="text-[2rem] sm:text-[2.5rem]">{heading}</h1>
+    <p class="mt-3 text-sm text-fg-muted">Última actualización: {updated}</p>
+    <article class="legal mt-8">
+      <slot />
+    </article>
+  </Container>
+  <Footer slot="footer" />
+</BaseLayout>

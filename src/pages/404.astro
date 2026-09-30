@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Section from '../components/Section.astro';
+import Button from '../components/Button.astro';
+---
+
+<BaseLayout title="Página no encontrada | Pyramidev" description="La página que buscas no existe o cambió de dirección.">
+  <Header slot="header" />
+  <Section size="md">
+    <p class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Error 404</p>
+    <h1 class="mt-4 text-[2rem] sm:text-[2.5rem]">No encontramos esta página</h1>
+    <p class="mt-6 max-w-xl text-lg text-fg-muted">La dirección puede haber cambiado o tener un error. Puedes volver al inicio o escribirnos si buscabas algo en particular.</p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <Button href="/">Ir al inicio</Button>
+      <Button href="/contacto" variant="secondary">Contacto</Button>
+    </div>
+  </Section>
+  <Footer slot="footer" />
+</BaseLayout>

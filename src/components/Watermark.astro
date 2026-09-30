@@ -1,0 +1,24 @@
+---
+import { Image } from 'astro:assets';
+import isotipoDark from '../assets/brand/isotipo-dark.png';
+import isotipoLight from '../assets/brand/isotipo-light.png';
+
+interface Props {
+  /** Which isotipo file: `dark` = for dark backgrounds, `light` = for light backgrounds. */
+  on?: 'dark' | 'light';
+  class?: string;
+}
+// Letterhead-style watermark: the real isotipo, large, cropped at the corner,
+// shown only at low opacity (as the brand does on letterhead and cards). Never recolored or rotated.
+const { on = 'dark', class: className = '' } = Astro.props;
+const src = on === 'dark' ? isotipoDark : isotipoLight;
+---
+
+<Image
+  src={src}
+  alt=""
+  width={1000}
+  aria-hidden="true"
+  loading="eager"
+  class:list={['pointer-events-none absolute select-none', className]}
+/>

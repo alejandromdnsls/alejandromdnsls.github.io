@@ -1,0 +1,84 @@
+---
+import { render } from 'astro:content';
+import { getPublishedCases } from '../../lib/cases';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import CaseFigures from '../../components/CaseFigures.astro';
+import Section from '../../components/Section.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { SERVICES } from '../../data/services';
+import { CASE_KIND_LABEL as kindLabel } from '../../data/caseKinds';
+
+export async function getStaticPaths() {
+  const cases = await getPublishedCases();
+  return cases.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, sector, kind, summary, services, stack, url, images } = entry.data;
+const related = SERVICES.filter((s) => services.includes(s.slug));
+---
+
+<BaseLayout title={`${title} | Pyramidev`} description={summary}>
+  <Header slot="header" />
+
+  <PageHeader
+    compact
+    back={{ href: '/casos', label: 'Casos de estudio' }}
+    eyebrow={`${sector} · ${kindLabel[kind]}`}
+    title={title}
+    lead={summary}
+  />
+
+  <Section size="xl">
+    <div class="grid gap-12 lg:grid-cols-12">
+      <div class="space-y-12 lg:col-span-8">
+        <CaseFigures images={images} />
+        <article class="case-body">
+          <Content />
+        </article>
+      </div>
+      <aside class="lg:col-span-4" aria-label="Datos del proyecto">
+        <dl class="space-y-6 border-t border-line-strong pt-4">
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Sector</dt>
+            <dd class="mt-1">{sector}</dd>
+          </div>
+          {url && (
+            <div>
+              <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Sitio</dt>
+              <dd class="mt-1">
+                <a href={url} target="_blank" rel="noopener" class="text-link-base underline underline-offset-4 hover:text-link-hover">{new URL(url).hostname.replace(/^www\./, '')}</a>
+              </dd>
+            </div>
+          )}
+          <div>
+            <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Servicios</dt>
+            <dd class="mt-1">
+              <ul class="space-y-1">
+                {related.map((s) => <li><a href={`/servicios#${s.slug}`} class="text-link-base underline underline-offset-4 hover:text-link-hover">{s.title}</a></li>)}
+              </ul>
+            </dd>
+          </div>
+          {stack.length > 0 && (
+            <div>
+              <dt class="text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">Tecnologías</dt>
+              <dd class="mt-2">
+                <ul class="flex flex-wrap gap-2">
+                  {stack.map((t) => <li class="rounded-sm bg-panel px-2 py-1 text-xs font-medium text-fg">{t}</li>)}
+                </ul>
+              </dd>
+            </div>
+          )}
+        </dl>
+      </aside>
+    </div>
+  </Section>
+
+  <CtaBand />
+
+  <Footer slot="footer" />
+</BaseLayout>
