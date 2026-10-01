@@ -6,7 +6,7 @@ export const SITE_URL = 'https://www.pyramidev.com.mx';
 
 export const CONTACT = {
   email: 'hola@pyramidev.com.mx',
-  phone: { display: '+52 55 2190 2339', tel: '+525521902339' },
+  phone: { display: '+52 55 4535 1951', tel: '+525545351951' },
   // Public WhatsApp number (digits only, country code first).
   whatsapp: { display: '+52 55 4535 1951', number: '525545351951' },
   location: 'CDMX, México',
