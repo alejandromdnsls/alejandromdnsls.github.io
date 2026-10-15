@@ -27,14 +27,39 @@
   --pv-lilac: #a9a3c2;           /* muted text on dark */
   --pv-lilac-strong: #8b86a8;    /* input border on dark (5.69:1) */
 
+  /* Product accents (extension, py-ui). One accent per product; applied only through [data-product] below. */
+  --pv-orange: #c2410c;          /* Aerotaxi accent on light (5.18:1 on white) */
+  --pv-orange-tint: #fff1e8;     /* Aerotaxi fill behind accent text on light (orange on it 4.69:1) */
+  --pv-orange-on-dark: #fb923c;  /* Aerotaxi accent on ink (8.70:1) */
+  --pv-amber: #b4530a;           /* Livilinq accent on light (5.02:1 on white) */
+  --pv-amber-on-dark: #e8955a;   /* Livilinq accent on ink (8.32:1) */
+  --pv-gold: #f2b530;            /* Ticketax Edit action fill only; ink text on it (10.72:1) */
+  --pv-gold-hover: #d99e1e;      /* Ticketax Edit hover; ink text on it (8.31:1) */
+  --pv-gold-icon: #966d00;       /* gold as a foreground on light (icon-only Edit action, 4.68:1 on white) */
+
   /* Gradient: brandbook "deep blue to white" progression; only flat section backgrounds */
   --gradient-brand-dark: linear-gradient(160deg, var(--pv-ink) 0%, var(--pv-navy) 100%);
 
   /* Typography */
   --font-sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace; /* folios, RFC, UUID, amounts, plates; tabular numerals */
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
+
+  /* Text styles for app UI (extension, py-ui). Brand text styles live in DESIGN.md section 4. */
+  --type-app-title-size: 28px;   /* the single h1 of an admin/ERP page */
+  --type-app-title-line: 1.2;
+  --type-app-title-weight: 400;
+  --type-table-size: 14px;       /* table cells and dense lists */
+  --type-table-line: 20px;
+  --type-table-weight: 400;
+  --type-caption-size: 12px;     /* helper text, counters, table meta */
+  --type-caption-line: 16px;
+  --type-caption-weight: 400;
+  --type-mono-size: 13px;        /* family --font-mono; never paragraphs */
+  --type-mono-line: 20px;
+  --type-mono-weight: 400;
 
   /* Spacing (4px base) */
   --space-1: 0.25rem;
@@ -81,6 +106,31 @@
   --color-focus-ring: var(--pv-blue);
   --color-error: #b42318; /* 6.57:1 on white (extension) */
 
+  /* Status triplets (extension, py-ui). Solid fill takes white text and is the same in both themes; chips are pale on light
+     and deep on dark (text >= 5.5:1). Always pair color with an icon or a word. */
+  --color-success: #047857;
+  --color-success-chip: #e7f5ec;
+  --color-success-chip-fg: #0f5c33;
+  --color-success-chip-border: #bfe5cc;
+  --color-warning: #b45309;
+  --color-warning-chip: #fff6e5;
+  --color-warning-chip-fg: #5c3b00;
+  --color-warning-chip-border: #f2d49b;
+  --color-danger: #b42318;
+  --color-danger-hover: #912018;
+  --color-danger-chip: #fef3f2;
+  --color-danger-chip-fg: #b42318;
+  --color-danger-chip-border: #f6c6be;
+  --color-info: #1d4ed8;
+  --color-info-chip: #eaf2fe;
+  --color-info-chip-fg: #023496;
+  --color-info-chip-border: #bfd7fb;
+  --color-neutral-chip: var(--color-surface); /* text --color-text-muted, border --color-border-strong */
+
+  /* Product accent: the base (ERP/CRM, Ticketax) is the link blue. [data-product] overrides it; only the page eyebrow and the accent badge use it. */
+  --color-accent: var(--color-link);
+  --color-accent-tint: var(--color-surface);
+
   /* Elevation: subtle, neutral */
   --shadow-sm: 0 1px 2px rgb(14 0 51 / 0.06);
   --shadow-md: 0 2px 8px rgb(14 0 51 / 0.08);
@@ -102,6 +152,20 @@
   --color-link-hover: var(--pv-blue-tint-hover);
   --color-focus-ring: var(--pv-sky);
   --color-error: #ff8f85; /* 8.93:1 on ink (extension) */
+  --color-success-chip: #123d2a;
+  --color-success-chip-fg: #6ee7b7;
+  --color-success-chip-border: #1f5c3f;
+  --color-warning-chip: #3d2900;
+  --color-warning-chip-fg: #f2d49b;
+  --color-warning-chip-border: #6b4a1f;
+  --color-danger-chip: #451614;
+  --color-danger-chip-fg: #fca79e;
+  --color-danger-chip-border: #7a2e27;
+  --color-info-chip: #0b2e82;
+  --color-info-chip-fg: #84affb;
+  --color-info-chip-border: #1b48a8;
+  --color-accent: var(--color-link);
+  --color-accent-tint: var(--color-surface);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 2px 8px rgb(0 0 0 / 0.45);
   color-scheme: dark;
@@ -122,8 +186,79 @@
     --color-link-hover: var(--pv-blue-tint-hover);
     --color-focus-ring: var(--pv-sky);
     --color-error: #ff8f85;
+    --color-success-chip: #123d2a;
+    --color-success-chip-fg: #6ee7b7;
+    --color-success-chip-border: #1f5c3f;
+    --color-warning-chip: #3d2900;
+    --color-warning-chip-fg: #f2d49b;
+    --color-warning-chip-border: #6b4a1f;
+    --color-danger-chip: #451614;
+    --color-danger-chip-fg: #fca79e;
+    --color-danger-chip-border: #7a2e27;
+    --color-info-chip: #0b2e82;
+    --color-info-chip-fg: #84affb;
+    --color-info-chip-border: #1b48a8;
+    --color-accent: var(--color-link);
+    --color-accent-tint: var(--color-surface);
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
     --shadow-md: 0 2px 8px rgb(0 0 0 / 0.45);
     color-scheme: dark;
   }
+}
+
+/*
+ * Chart tokens (extension, py-ui charts). Series 1 is Energía Digital, series 2 a green distinct from the status
+ * --color-success (status green stays reserved for chips). The ordinal ramp is one hue, light to dark, for ordered
+ * stages (funnel, aging buckets). Validated with the dataviz palette checker: the pair passes CVD separation and
+ * >= 3:1 on white and on Base Oscura; the ramp is monotone. Grid, axis and track reuse the semantic neutrals.
+ */
+:root {
+  --chart-1: #034eff;
+  --chart-2: #0e9f6e;
+  --chart-o1: #7fa3ff;
+  --chart-o2: #4f7fff;
+  --chart-o3: #034eff;
+  --chart-o4: #03005b;
+  --chart-grid: var(--color-border);
+  --chart-axis: var(--color-text-muted);
+  --chart-track: var(--color-surface);
+}
+[data-theme="dark"] {
+  --chart-1: #4f7fff;
+  --chart-2: #059669;
+  --chart-o1: #2d5bd6;
+  --chart-o2: #4f7fff;
+  --chart-o3: #7fa3ff;
+  --chart-o4: #bbd9f9;
+  --chart-grid: var(--color-border);
+  --chart-axis: var(--color-text-muted);
+  --chart-track: var(--color-surface);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --chart-1: #4f7fff;
+    --chart-2: #059669;
+    --chart-o1: #2d5bd6;
+    --chart-o2: #4f7fff;
+    --chart-o3: #7fa3ff;
+    --chart-o4: #bbd9f9;
+    --chart-grid: var(--color-border);
+    --chart-axis: var(--color-text-muted);
+    --chart-track: var(--color-surface);
+  }
+}
+
+/*
+ * Product accents. Put data-product on the same element as data-theme (<html>). The ERP/CRM sets no data-product and uses the
+ * base blue only; Ticketax sets data-product="ticketax" but keeps the base blue (its gold is only the Edit action fill:
+ * --pv-gold, hover --pv-gold-hover, icon --pv-gold-icon). Aerotaxi and Livilinq replace --color-accent. The accent colors
+ * text, icons, the page eyebrow and the accent badge; never a button fill, a background or a gradient.
+ */
+[data-product="aerotaxi"] { --color-accent: var(--pv-orange); --color-accent-tint: var(--pv-orange-tint); }
+[data-product="livilinq"] { --color-accent: var(--pv-amber); }
+[data-theme="dark"][data-product="aerotaxi"] { --color-accent: var(--pv-orange-on-dark); --color-accent-tint: var(--color-surface); }
+[data-theme="dark"][data-product="livilinq"] { --color-accent: var(--pv-amber-on-dark); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"])[data-product="aerotaxi"] { --color-accent: var(--pv-orange-on-dark); --color-accent-tint: var(--color-surface); }
+  :root:not([data-theme="light"])[data-product="livilinq"] { --color-accent: var(--pv-amber-on-dark); }
 }

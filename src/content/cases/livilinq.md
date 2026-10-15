@@ -7,6 +7,8 @@ stack: [NestJS, PostgreSQL, React, Python]
 summary: Plataforma para administrar fraccionamientos con acceso controlado, con aplicación para residentes, panel de administración y un dispositivo de acceso vehicular.
 url: https://livilinq.com/
 images:
+  - src: ../../assets/cases/livilinq/web-inicio.png
+    alt: "Página de inicio de Livilinq con un pase de visita ilustrativo con código QR para la caseta"
   - src: ../../assets/cases/livilinq/app-pagos.png
     alt: "Pantalla de estado de cuenta de la aplicación para residentes de Livilinq, con saldo pendiente y lista de cuotas"
   - src: ../../assets/cases/livilinq/app-reservaciones.png
