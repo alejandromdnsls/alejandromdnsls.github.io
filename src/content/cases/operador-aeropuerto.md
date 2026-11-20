@@ -5,6 +5,8 @@ kind: confidencial
 services: [control-reportes, estacionamientos]
 stack: [Node.js, Fastify, SQL Server, PostgreSQL, React]
 summary: "Gestión de reportes oficiales de un estacionamiento de aeropuerto en México: reconstrucción de 32 reportes de estacionamiento a partir de un sistema heredado sin documentación, con conciliación automática y bitácora de auditoría."
+seoTitle: "Reportes para estacionamiento de aeropuerto | Pyramidev"
+seoDescription: "Reconstruimos 32 reportes oficiales de un estacionamiento de aeropuerto en México desde un sistema heredado, con conciliación automática y auditoría."
 order: 5
 featured: false
 ---

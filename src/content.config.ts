@@ -13,6 +13,10 @@ const cases = defineCollection({
       services: z.array(z.string()),
       stack: z.array(z.string()),
       summary: z.string(),
+      // Optional overrides for <title> and meta description when the defaults
+      // (`${title} | Pyramidev` and summary) exceed search-result limits.
+      seoTitle: z.string().max(60).optional(),
+      seoDescription: z.string().max(155).optional(),
       // Public website of the product or client, when allowed
       url: z.url().optional(),
       // Optional screenshots: product screens with demo data only, or captures of public sites.

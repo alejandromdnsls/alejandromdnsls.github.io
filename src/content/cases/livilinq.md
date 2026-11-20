@@ -5,6 +5,8 @@ kind: producto
 services: [operacion-integral, quioscos-acceso]
 stack: [NestJS, PostgreSQL, React, Python]
 summary: Plataforma para administrar fraccionamientos con acceso controlado, con aplicación para residentes, panel de administración y un dispositivo de acceso vehicular.
+seoTitle: "Livilinq, plataforma para fraccionamientos | Pyramidev"
+seoDescription: "Plataforma para administrar fraccionamientos con acceso controlado: app para residentes, panel de administración y dispositivo de acceso vehicular."
 url: https://livilinq.com/
 images:
   - src: ../../assets/cases/livilinq/web-inicio.png

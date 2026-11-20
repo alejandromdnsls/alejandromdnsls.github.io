@@ -74,6 +74,21 @@ export const SERVICES: Service[] = [
     cases: ['livilinq'],
   },
   {
+    slug: 'impresion-etiquetas',
+    title: 'Equipo de impresión y etiquetas',
+    short: 'Impresoras térmicas, etiquetas autoadheribles con QR y consumibles, instalados y calibrados para tu operación.',
+    description:
+      'Suministramos y dejamos funcionando el equipo de impresión que tu operación necesita: impresoras térmicas para tickets y etiquetas, y las etiquetas autoadheribles con el QR de cada sucursal o caja, listas para pegar. Se cotiza según el número de cajas, sucursales y equipos.',
+    components: [
+      'Etiquetas autoadheribles con el QR de cada sucursal o caja',
+      'Impresoras térmicas para tickets y etiquetas, con conexión USB o Ethernet',
+      'Instalación, calibración y capacitación de tu equipo',
+      'Rollos y consumibles para reposición',
+      'Garantía del fabricante en el equipo',
+    ],
+    cases: ['ticketax'],
+  },
+  {
     slug: 'control-reportes',
     title: 'Gestión de reportes y control',
     short: 'Gestión de reportes oficiales que cuadran al centavo, con permisos por rol y bitácoras que no se pueden alterar.',

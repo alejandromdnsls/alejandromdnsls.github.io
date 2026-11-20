@@ -1,0 +1,75 @@
+---
+/**
+ * Cookie consent banner of the site legal kit (templates/legal/sitios/banner-consentimiento.*).
+ * Rendered only when a non-essential tool is configured (today: ANALYTICS.cloudflareToken in
+ * site.ts). Without one the site uses only essential storage and renders nothing here.
+ * public/legal/banner-consentimiento.{js,css} are verbatim copies of the kit files.
+ * The site has no marketing tool, so the marketing option of the kit is left out; add it back
+ * (kit markup) together with its row in the cookie policy when one is added.
+ * Every non-essential tag is written inert (type="text/plain" data-consent=...) and only the
+ * banner script activates it after opt-in; never add a tracking tag with a plain <script src>.
+ */
+import { ANALYTICS, HAS_NON_ESSENTIAL } from '../../data/site';
+import { COOKIE_POLICY } from '../../data/legal';
+
+interface Props {
+  /** Where it is placed: `head` renders the gated tags and assets, `body` the banner markup. */
+  part: 'head' | 'body';
+}
+const { part } = Astro.props;
+const active = HAS_NON_ESSENTIAL;
+---
+
+{active && part === 'head' && (
+  <>
+    <link rel="stylesheet" href="/legal/banner-consentimiento.css" />
+    <script is:inline src="/legal/banner-consentimiento.js" defer></script>
+    <script
+      is:inline
+      type="text/plain"
+      data-consent="analytics"
+      data-src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={JSON.stringify({ token: ANALYTICS.cloudflareToken })}
+      defer
+    ></script>
+  </>
+)}
+
+{active && part === 'body' && (
+  <div
+    id="py-consent"
+    class="py-consent"
+    role="dialog"
+    aria-modal="false"
+    aria-labelledby="py-consent-title"
+    aria-describedby="py-consent-text"
+    data-policy-version={COOKIE_POLICY.version}
+    hidden
+  >
+    <h2 id="py-consent-title" class="py-consent__title" tabindex="-1" data-consent-title>Uso de cookies</h2>
+    <p id="py-consent-text" class="py-consent__text">
+      Usamos cookies esenciales para que el sitio funcione. Con su permiso, también usaremos analítica, para saber cómo se usa el sitio. Puede aceptarla, rechazarla o configurarla; puede cambiar su decisión en cualquier momento desde «Configurar cookies», al pie de cada página. Más información en la <a href="/politica-de-cookies">política de cookies</a> y en el <a href="/aviso-de-privacidad">aviso de privacidad</a>.
+    </p>
+
+    <div class="py-consent__panel" data-consent-panel hidden>
+      <fieldset>
+        <legend>Elija qué cookies permite</legend>
+        <label class="py-consent__option">
+          <input type="checkbox" name="essential" checked disabled />
+          <span>Esenciales (siempre activas)<small>Necesarias para mostrar el sitio, recordar su decisión sobre cookies y proteger los formularios.</small></span>
+        </label>
+        <label class="py-consent__option">
+          <input type="checkbox" name="analytics" />
+          <span>Analítica<small>Nos dicen qué páginas se visitan y cómo se llega a ellas, para mejorar el sitio.</small></span>
+        </label>
+      </fieldset>
+    </div>
+
+    <div class="py-consent__actions">
+      <button type="button" class="py-consent__btn" data-consent-action="accept">Aceptar todas</button>
+      <button type="button" class="py-consent__btn" data-consent-action="reject">Rechazar no esenciales</button>
+      <button type="button" class="py-consent__btn" data-consent-action="configure">Configurar</button>
+      <button type="button" class="py-consent__btn" data-consent-action="save" hidden>Guardar selección</button>
+    </div>
+  </div>
+)}

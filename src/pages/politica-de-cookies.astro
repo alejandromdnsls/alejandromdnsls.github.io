@@ -1,0 +1,124 @@
+---
+/**
+ * Cookie policy, from templates/legal/sitios/politica-cookies.html of the workspace site legal kit.
+ * It lists only the storage the site really uses. Today that is the theme preference; the banner
+ * storage and the analytics row appear only when a non-essential tool is configured (site.ts).
+ * COOKIE_POLICY.version (data/legal.ts) is the banner's data-policy-version: bump it on every
+ * change of categories, tools or wording, and every visitor is asked again.
+ * Draft for counsel: TODO(legal) items stay as JSX source comments, never HTML comments.
+ */
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { HAS_NON_ESSENTIAL, SITE_URL } from '../data/site';
+import { COMPANY, COOKIE_POLICY } from '../data/legal';
+
+const site = SITE_URL.replace(/^https:\/\//, '');
+
+interface Row {
+  category: string;
+  tool: string;
+  name: string;
+  purpose: string;
+  duration: string;
+}
+const rows: Row[] = [
+  {
+    category: 'Esencial',
+    tool: 'Preferencia de tema del sitio (propio)',
+    name: 'theme (almacenamiento local)',
+    purpose: 'Recordar si usted eligió el tema claro u oscuro',
+    duration: 'Hasta que usted la cambie o borre los datos del navegador',
+  },
+];
+if (HAS_NON_ESSENTIAL) {
+  rows.push(
+    {
+      category: 'Esencial',
+      tool: 'Aviso de cookies del sitio (propio)',
+      name: 'py-consent (almacenamiento local)',
+      purpose: 'Recordar su decisión, la fecha y la versión de esta política',
+      duration: 'Hasta que usted la cambie, borre los datos del navegador o cambie la versión de esta política',
+    },
+    {
+      category: 'Analítica',
+      tool: 'Cloudflare Web Analytics (Cloudflare, Inc.)',
+      // Per Cloudflare's documentation the beacon keeps no cookies or local storage in the browser.
+      // TODO(content): re-read that documentation and record the date before setting the token.
+      name: 'No guarda cookies en su navegador',
+      purpose: 'Contar visitas a las páginas y su origen, sin identificarle',
+      duration: 'No aplica',
+    },
+  );
+}
+---
+
+<LegalLayout
+  title="Política de cookies | Pyramidev"
+  description="Política de cookies del sitio de Pyramidev Technologies, S.A. de C.V.: qué guarda el sitio en su navegador y cómo cambiar su decisión."
+  heading="Política de cookies"
+  version={COOKIE_POLICY.version}
+  updated={COOKIE_POLICY.updated}
+>
+  <h2>Qué son las cookies</h2>
+  <p>
+    Las cookies son pequeños archivos que un sitio guarda en su navegador. Tecnologías similares, como el almacenamiento local del navegador o los códigos de seguimiento, cumplen funciones parecidas; en esta política las llamamos también cookies. Las usa {COMPANY.legalName}, responsable del sitio {site}, conforme a su <a href="/aviso-de-privacidad">aviso de privacidad</a>.
+  </p>
+
+  <h2>Categorías y su consentimiento</h2>
+  <ul>
+    <li><strong>Esenciales.</strong> Hacen funcionar el sitio y recuerdan sus preferencias. Siempre están activas porque sin ellas el sitio no funciona como usted lo eligió.</li>
+    {HAS_NON_ESSENTIAL ? (
+      <li><strong>Analítica.</strong> Nos dice qué páginas se visitan y cómo se llega a ellas. Solo se activa si usted la acepta.</li>
+    ) : (
+      <li><strong>Analítica y marketing.</strong> Hoy el sitio no usa cookies de analítica ni de marketing. Si en el futuro las usa, solo se activarán con su permiso, mediante un aviso de cookies en el que podrá aceptarlas o rechazarlas.</li>
+    )}
+  </ul>
+  {HAS_NON_ESSENTIAL && (
+    <p>Mientras usted no decida, el sitio no carga la analítica. Puede aceptarla, rechazarla o configurarla; las tres opciones tienen el mismo peso en el aviso de cookies.</p>
+  )}
+
+  <h2>Cookies que usa este sitio</h2>
+  <div class="mt-4 overflow-x-auto rounded-md border border-line">
+    <table class="w-full min-w-[36rem] text-left text-sm">
+      <thead class="bg-panel">
+        <tr>
+          <th scope="col" class="p-3 font-medium">Categoría</th>
+          <th scope="col" class="p-3 font-medium">Herramienta y proveedor</th>
+          <th scope="col" class="p-3 font-medium">Nombre</th>
+          <th scope="col" class="p-3 font-medium">Finalidad</th>
+          <th scope="col" class="p-3 font-medium">Duración</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr class="border-t border-line align-top">
+            <td class="p-3">{r.category}</td>
+            <td class="p-3">{r.tool}</td>
+            <td class="p-3">{r.name}</td>
+            <td class="p-3">{r.purpose}</td>
+            <td class="p-3">{r.duration}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-fg-muted">Lista revisada el {COOKIE_POLICY.updated}.</p>
+
+  <section id="configurar">
+    <h2>Cómo cambiar su decisión</h2>
+    {HAS_NON_ESSENTIAL ? (
+      <p>
+        Puede cambiar su decisión en cualquier momento desde el enlace «Configurar cookies» al pie de cada página. Si retira un permiso que había dado, el sitio borra las cookies de esa categoría que conoce y vuelve a cargar la página. También puede borrar las cookies desde la configuración de su navegador; en ese caso el sitio le preguntará de nuevo. Cuando esta política cambie de versión, le pediremos de nuevo su decisión.
+      </p>
+    ) : (
+      <p>
+        Como el sitio solo usa almacenamiento esencial, no hay una decisión que tomar. Puede borrar su preferencia de tema desde la configuración de su navegador en cualquier momento. Si el sitio llega a usar cookies no esenciales, le pediremos su decisión antes de activarlas.
+      </p>
+    )}
+  </section>
+  {/* TODO(legal): confirm whether analytics and marketing cookies need express or tacit consent, and whether a cookieless analytics tool may load before the decision (the kit blocks it by default). */}
+  {/* TODO(legal): confirm whether the decision must be asked again after some time and how long the consent log is kept. */}
+
+  <p class="text-sm text-fg-muted">
+    Versión {COOKIE_POLICY.version} · Última actualización: {COOKIE_POLICY.updated} · {COMPANY.legalName}
+  </p>
+</LegalLayout>

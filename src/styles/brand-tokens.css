@@ -31,8 +31,8 @@
   --pv-orange: #c2410c;          /* Aerotaxi accent on light (5.18:1 on white) */
   --pv-orange-tint: #fff1e8;     /* Aerotaxi fill behind accent text on light (orange on it 4.69:1) */
   --pv-orange-on-dark: #fb923c;  /* Aerotaxi accent on ink (8.70:1) */
-  --pv-amber: #b4530a;           /* Livilinq accent on light (5.02:1 on white) */
-  --pv-amber-on-dark: #e8955a;   /* Livilinq accent on ink (8.32:1) */
+  --pv-amber: #b4530a;           /* Livilinq "pendiente" state on light (5.02:1 on white) */
+  --pv-amber-on-dark: #e8955a;   /* Livilinq "pendiente" state on ink (8.32:1) */
   --pv-gold: #f2b530;            /* Ticketax Edit action fill only; ink text on it (10.72:1) */
   --pv-gold-hover: #d99e1e;      /* Ticketax Edit hover; ink text on it (8.31:1) */
   --pv-gold-icon: #966d00;       /* gold as a foreground on light (icon-only Edit action, 4.68:1 on white) */
@@ -215,6 +215,8 @@
 :root {
   --chart-1: #034eff;
   --chart-2: #0e9f6e;
+  --chart-3: #9b3fd0;
+  --chart-4: #d0590c;
   --chart-o1: #7fa3ff;
   --chart-o2: #4f7fff;
   --chart-o3: #034eff;
@@ -226,6 +228,8 @@
 [data-theme="dark"] {
   --chart-1: #4f7fff;
   --chart-2: #059669;
+  --chart-3: #9466e0;
+  --chart-4: #d0631f;
   --chart-o1: #2d5bd6;
   --chart-o2: #4f7fff;
   --chart-o3: #7fa3ff;
@@ -238,6 +242,8 @@
   :root:not([data-theme="light"]) {
     --chart-1: #4f7fff;
     --chart-2: #059669;
+    --chart-3: #9466e0;
+    --chart-4: #d0631f;
     --chart-o1: #2d5bd6;
     --chart-o2: #4f7fff;
     --chart-o3: #7fa3ff;
@@ -251,14 +257,12 @@
 /*
  * Product accents. Put data-product on the same element as data-theme (<html>). The ERP/CRM sets no data-product and uses the
  * base blue only; Ticketax sets data-product="ticketax" but keeps the base blue (its gold is only the Edit action fill:
- * --pv-gold, hover --pv-gold-hover, icon --pv-gold-icon). Aerotaxi and Livilinq replace --color-accent. The accent colors
+ * --pv-gold, hover --pv-gold-hover, icon --pv-gold-icon). Livilinq keeps the base blue too (new brand, owner decision
+ * 2026-10-23: ink, --pv-blue and #BBD9F9); --pv-amber stays only for its "pendiente" state. Aerotaxi replaces --color-accent. The accent colors
  * text, icons, the page eyebrow and the accent badge; never a button fill, a background or a gradient.
  */
 [data-product="aerotaxi"] { --color-accent: var(--pv-orange); --color-accent-tint: var(--pv-orange-tint); }
-[data-product="livilinq"] { --color-accent: var(--pv-amber); }
 [data-theme="dark"][data-product="aerotaxi"] { --color-accent: var(--pv-orange-on-dark); --color-accent-tint: var(--color-surface); }
-[data-theme="dark"][data-product="livilinq"] { --color-accent: var(--pv-amber-on-dark); }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"])[data-product="aerotaxi"] { --color-accent: var(--pv-orange-on-dark); --color-accent-tint: var(--color-surface); }
-  :root:not([data-theme="light"])[data-product="livilinq"] { --color-accent: var(--pv-amber-on-dark); }
 }

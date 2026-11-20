@@ -1,110 +1,137 @@
 ---
+/**
+ * Integral privacy notice, from templates/legal/sitios/aviso-privacidad-integral.html of the
+ * workspace site legal kit. Draft for counsel: every TODO(legal) stays as a JSX source comment
+ * (never an HTML comment, which would ship) and is listed as pending for counsel.
+ * Bump PRIVACY_NOTICE in data/legal.ts on every change of wording.
+ */
 import LegalLayout from '../layouts/LegalLayout.astro';
+import { CONTACT, HAS_NON_ESSENTIAL, SITE_URL } from '../data/site';
+import { COMPANY, LAW_NAME, PRIVACY_AUTHORITY, PRIVACY_NOTICE } from '../data/legal';
+
+const site = SITE_URL.replace(/^https:\/\//, '');
+const arcoEmail = CONTACT.email;
 ---
 
 <LegalLayout
   title="Aviso de privacidad | Pyramidev"
-  description="Aviso de privacidad de Pyramidev Technologies, S.A. de C.V. conforme a la LFPDPPP: datos que recabamos en el formulario de contacto, finalidades y derechos ARCO."
+  description="Aviso de privacidad integral de Pyramidev Technologies, S.A. de C.V.: datos que tratamos, finalidades, derechos ARCO, proveedores y autoridad."
   heading="Aviso de privacidad integral"
-  updated="30 de septiembre de 2026"
+  version={PRIVACY_NOTICE.version}
+  updated={PRIVACY_NOTICE.updated}
 >
+  <h2>Identidad y domicilio del responsable</h2>
   <p>
-    En cumplimiento de la <strong>Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)</strong> y su Reglamento, ponemos a tu disposición este aviso de privacidad para quienes visitan nuestro sitio web y nos escriben a través de él.
+    <strong>{COMPANY.legalName}</strong> (en adelante, «el Responsable»), con Registro Federal de Contribuyentes {COMPANY.rfc} y domicilio en {COMPANY.address}, es responsable del tratamiento de los datos personales que usted proporcione a través del sitio {site}, de su formulario y de los canales de contacto que en él se indican, en términos de la {LAW_NAME} (en adelante, «la Ley»).
   </p>
+  <p>
+    Contacto: <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> · Teléfono y WhatsApp: {CONTACT.phone.display}.
+  </p>
+  {/* TODO(legal): confirm the domicile to publish (the site shows it today without the interior number) and the citation of the Law and its current Regulation. */}
 
-  <h2>1. Identidad y domicilio del responsable</h2>
-  <p>
-    <strong>Pyramidev Technologies, S.A. de C.V.</strong> (en adelante, "Pyramidev"), es responsable del tratamiento de tus datos personales.
-  </p>
+  <h2>Datos personales que tratamos</h2>
+  <p>Para las finalidades de este aviso tratamos las siguientes categorías de datos personales:</p>
   <ul>
-    <li><strong>RFC:</strong> PTE260206DH3</li>
-    <li><strong>Domicilio fiscal:</strong> Juan Cousin 136, Col. Sacramento, Alcaldía Álvaro Obregón, C.P. 01420, Ciudad de México</li>
-    <li><strong>Correo de contacto:</strong> <a href="mailto:hola@pyramidev.com.mx">hola@pyramidev.com.mx</a></li>
-    <li><strong>Teléfono:</strong> +52 55 4535 1951</li>
-    <li><strong>Sitio web:</strong> https://www.pyramidev.com.mx</li>
+    <li>Datos de identificación y contacto que usted escribe en el formulario: nombre, empresa, correo electrónico y número de teléfono, además del tipo de proyecto que le interesa.</li>
+    <li>El contenido de los mensajes que usted nos envía por el formulario, el correo electrónico o WhatsApp, y el número desde el que nos escribe por WhatsApp.</li>
+    <li>Datos técnicos de la visita que registra el proveedor de alojamiento del sitio al servir las páginas, como la dirección IP, el navegador y la fecha de la visita.</li>
+    {HAS_NON_ESSENTIAL && (
+      <li>Datos de navegación, como las páginas visitadas y el origen de la visita, solo si usted acepta la analítica en el aviso de cookies; el detalle está en la <a href="/politica-de-cookies">política de cookies</a>.</li>
+    )}
   </ul>
+  <p>No solicitamos datos personales sensibles. Le pedimos no incluirlos en sus mensajes.</p>
+  {/* TODO(legal): confirm the list of data and that the site does not process sensitive data or data of minors. */}
 
-  <h2>2. Datos personales que recabamos</h2>
-  <p>Recabamos datos únicamente cuando nos los proporcionas de forma voluntaria en el formulario de contacto:</p>
+  <h2>Finalidades del tratamiento</h2>
+  <p><strong>Finalidades necesarias</strong> para atender su solicitud:</p>
   <ul>
-    <li>Nombre</li>
-    <li>Empresa (opcional)</li>
-    <li>Correo electrónico</li>
-    <li>Teléfono (opcional)</li>
-    <li>Tipo de proyecto de interés</li>
-    <li>El contenido del mensaje que escribas</li>
+    <li>Responder a su solicitud de contacto, información o cotización.</li>
+    <li>Darle seguimiento por el medio que usted eligió (correo electrónico, teléfono o WhatsApp).</li>
+    <li>Preparar y enviar la propuesta o cotización que usted solicite.</li>
+    <li>Proteger el sitio y su formulario contra fraude y uso indebido.</li>
   </ul>
   <p>
-    <strong>No recabamos datos personales sensibles</strong> a través de este sitio. Te pedimos no incluir datos sensibles ni información confidencial de terceros en tu mensaje.
+    <strong>Finalidades adicionales.</strong> Hoy no tratamos sus datos para finalidades adicionales: no le enviamos publicidad ni información comercial que usted no haya pedido. Si esto cambia, le pediremos su consentimiento antes de hacerlo y podrá negarse sin que ello afecte la atención de su solicitud.
   </p>
+  {HAS_NON_ESSENTIAL && (
+    <p>Con su consentimiento, que puede negar o retirar en «Configurar cookies», medimos el uso del sitio con analítica.</p>
+  )}
+  {/* TODO(legal): confirm which purposes are necessary and which need consent, and the mechanism to refuse the additional ones. */}
 
-  <h2>3. Finalidades del tratamiento</h2>
-  <h3>Finalidades primarias</h3>
-  <ul>
-    <li>Responder a tu solicitud de información o de cotización.</li>
-    <li>Agendar llamadas o reuniones para entender tu proyecto.</li>
-    <li>Elaborar y enviarte propuestas comerciales, si las solicitas.</li>
-  </ul>
-  <h3>Finalidades secundarias</h3>
-  <p>No tratamos tus datos con fines de mercadotecnia ni publicidad. Si esto cambiara, te lo informaríamos y te pediríamos tu consentimiento antes de hacerlo.</p>
+  <h2>Opciones y medios para limitar el uso o divulgación de sus datos</h2>
+  <p>
+    Puede limitar el uso o la divulgación de sus datos personales en cualquier momento escribiendo a <a href={`mailto:${arcoEmail}`}>{arcoEmail}</a>, con su nombre y el uso que desea limitar. Le responderemos por el mismo medio.
+  </p>
+  {HAS_NON_ESSENTIAL && (
+    <p>También puede retirar en cualquier momento su consentimiento a la analítica desde el enlace «Configurar cookies» al pie de cada página.</p>
+  )}
+  {/* TODO(legal): decide whether to offer an own exclusion list and whether a public registry to avoid advertising must be mentioned. */}
 
-  <h2>4. Encargados y transferencias</h2>
+  <h2>Derechos de acceso, rectificación, cancelación y oposición</h2>
   <p>
-    El formulario de contacto utiliza el servicio <strong>Formspree</strong>, que actúa como encargado del tratamiento: recibe lo que escribes en el formulario y nos lo reenvía por correo electrónico. Formspree es un proveedor ubicado fuera de México, por lo que tus datos pueden tratarse en el extranjero.
+    Usted tiene derecho a acceder a sus datos personales, a rectificarlos si son inexactos o están incompletos, a cancelarlos y a oponerse a su tratamiento para fines específicos (derechos ARCO), así como a revocar el consentimiento que nos haya otorgado.
   </p>
   <p>
-    No vendemos ni compartimos tus datos personales con otros terceros, salvo que una autoridad competente lo exija conforme a la ley.
+    Para ejercerlos, envíe su solicitud al correo <a href={`mailto:${arcoEmail}`}>{arcoEmail}</a>, con el asunto «Solicitud ARCO», mediante escrito libre que contenga:
   </p>
-
-  <h2>5. Derechos ARCO</h2>
-  <p>
-    Tienes derecho a <strong>Acceder</strong>, <strong>Rectificar</strong>, <strong>Cancelar</strong> u <strong>Oponerte</strong> al tratamiento de tus datos personales (derechos ARCO), así como a <strong>revocar tu consentimiento</strong> y a limitar su uso o divulgación.
-  </p>
-  <p>Para ejercerlos, envía una solicitud a <a href="mailto:hola@pyramidev.com.mx">hola@pyramidev.com.mx</a> con el asunto "Solicitud ARCO". Debe incluir:</p>
   <ol>
-    <li>Tu nombre completo y un medio para responderte.</li>
-    <li>Una descripción clara del derecho que deseas ejercer y de los datos a los que se refiere.</li>
-    <li>Un documento que acredite tu identidad o, en su caso, la de tu representante.</li>
+    <li>Su nombre y el medio para comunicarle la respuesta.</li>
+    <li>Una copia de su identificación oficial o, si actúa por medio de representante, el documento que acredite la representación.</li>
+    <li>La descripción clara de los datos y del derecho que desea ejercer.</li>
+    <li>Para la rectificación, los documentos que respalden el cambio.</li>
   </ol>
   <p>
-    Te responderemos en un máximo de <strong>20 días hábiles</strong> contados desde la recepción de tu solicitud. Si procede, se hará efectiva dentro de los <strong>15 días hábiles</strong> siguientes a la respuesta.
+    Le comunicaremos la respuesta en un plazo máximo de 20 días contados desde que recibamos su solicitud y, si resulta procedente, la haremos efectiva dentro de los 15 días siguientes a la fecha en que le comuniquemos la respuesta. El ejercicio de estos derechos es gratuito; solo podrán cobrarse, en su caso, los gastos de envío o de reproducción.
   </p>
-  <!-- TODO(content): have legal counsel review the ARCO procedure and deadlines before publishing. -->
+  {/* TODO(legal): confirm whether the deadlines count business or calendar days, the deadline to ask for missing information, and the cases where cancellation does not apply. */}
+  {/* TODO(config): the kit proposes a dedicated ARCO mailbox (privacidad@pyramidev.com.mx); until it exists and is monitored, the notice uses the contact address. Publish the ARCO request form (solicitud-arco.html) when it is ready. */}
 
-  <h2>6. Revocación del consentimiento</h2>
+  <h2>Transferencias y remisiones de datos</h2>
+  <p>No transferimos sus datos personales a terceros sin su consentimiento, salvo en los casos en que la Ley lo permite sin él. No vendemos sus datos.</p>
+  <p>Para operar el sitio y atender su solicitud usamos proveedores que tratan los datos por nuestra cuenta y bajo nuestras instrucciones (remisiones):</p>
+  <ul>
+    <li><strong>GitHub</strong> (GitHub Pages), que aloja y sirve el sitio.</li>
+    <li><strong>Formspree</strong>, que recibe lo que usted escribe en el formulario de contacto y nos lo reenvía por correo electrónico.</li>
+    <li>Nuestro proveedor de correo electrónico, en el que recibimos y respondemos sus mensajes.</li>
+    <li><strong>WhatsApp</strong>, cuando usted decide escribirnos por ese medio.</li>
+    {HAS_NON_ESSENTIAL && (
+      <li><strong>Cloudflare</strong> (Cloudflare Web Analytics), solo si usted acepta la analítica.</li>
+    )}
+  </ul>
+  <p>Algunos de estos proveedores están fuera de México, por lo que sus datos pueden tratarse en el extranjero.</p>
+  {/* TODO(legal): draft the clause on transfers that need consent, if any, and confirm the provider list and which providers process data outside Mexico. */}
+  {/* TODO(content): name the e-mail provider of hola@pyramidev.com.mx. */}
+
+  <h2>Uso de cookies y tecnologías similares</h2>
+  {HAS_NON_ESSENTIAL ? (
+    <p>
+      El sitio usa almacenamiento esencial para funcionar. La analítica solo se activa si usted la acepta en el aviso de cookies, que puede reabrir en cualquier momento desde «Configurar cookies». La lista, su finalidad y su duración están en la <a href="/politica-de-cookies">política de cookies</a>.
+    </p>
+  ) : (
+    <p>
+      El sitio solo usa almacenamiento esencial para funcionar: guarda en su navegador su preferencia de tema visual (claro u oscuro). No usamos cookies de analítica ni de publicidad. El detalle está en la <a href="/politica-de-cookies">política de cookies</a>.
+    </p>
+  )}
+
+  <h2>Medidas de seguridad y conservación</h2>
   <p>
-    Puedes revocar tu consentimiento en cualquier momento escribiendo a <a href="mailto:hola@pyramidev.com.mx">hola@pyramidev.com.mx</a> con el asunto "Revocación de consentimiento". Si lo haces, dejaremos de tratar tus datos, lo que puede impedir que continuemos la conversación sobre tu proyecto.
+    El sitio se sirve por HTTPS y el acceso a los mensajes recibidos se limita a las personas de Pyramidev que los atienden. Conservamos los mensajes mientras dure la conversación comercial y por el tiempo necesario para cumplir obligaciones legales; después, los eliminamos.
   </p>
+  {/* TODO(legal): define and state the actual retention period. */}
 
-  <h2>7. Cookies y tecnologías de rastreo</h2>
+  <h2>Cambios al aviso de privacidad</h2>
   <p>
-    Este sitio guarda en tu navegador únicamente tu preferencia de tema visual (claro u oscuro). <strong>No usamos cookies de rastreo, de publicidad ni analíticas de terceros.</strong>
+    Cualquier cambio a este aviso se publicará en {site}/aviso-de-privacidad con su nueva versión y su fecha. Cuando un cambio requiera su consentimiento, se lo pediremos de nuevo antes de tratar sus datos conforme al aviso modificado.
   </p>
+  {/* TODO(legal): confirm the means to communicate changes to people who already gave us their data. */}
 
-  <h2>8. Medidas de seguridad</h2>
+  <h2>Autoridad</h2>
   <p>
-    Aplicamos medidas de seguridad administrativas, técnicas y físicas razonables para proteger tus datos: el sitio se sirve por HTTPS y el acceso a los mensajes recibidos se limita a las personas de Pyramidev que los atienden.
+    Si considera que su derecho a la protección de datos personales ha sido vulnerado, puede acudir a la {PRIVACY_AUTHORITY}, autoridad en la materia conforme a la Ley.
   </p>
+  {/* TODO(legal): confirm the name of the authority and the means to file complaints. */}
 
-  <h2>9. Conservación</h2>
-  <p>
-    Conservamos los mensajes del formulario mientras dure la conversación comercial y por el tiempo necesario para atender obligaciones legales. Después, los eliminamos.
-  </p>
-  <!-- TODO(content): define and state the actual retention period. -->
-
-  <h2>10. Cambios a este aviso</h2>
-  <p>
-    Podemos modificar este aviso. Publicaremos la versión vigente en esta página, con su fecha de actualización.
-  </p>
-
-  <h2>11. Autoridad competente</h2>
-  <p>
-    Si consideras que tu derecho a la protección de datos personales ha sido vulnerado, puedes acudir ante la autoridad competente en materia de protección de datos personales en México.
-  </p>
-  <!-- TODO(content): name the current competent authority (the former INAI was replaced in 2025) after legal review. -->
-
-  <h2>12. Consentimiento</h2>
-  <p>
-    Al enviar el formulario de contacto y marcar la casilla de aceptación, manifiestas que leíste este aviso y consientes el tratamiento de tus datos en los términos descritos.
+  <p class="text-sm text-fg-muted">
+    Versión {PRIVACY_NOTICE.version} · Última actualización: {PRIVACY_NOTICE.updated} · {COMPANY.legalName} · Contacto: <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
   </p>
 </LegalLayout>

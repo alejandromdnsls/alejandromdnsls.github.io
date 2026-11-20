@@ -11,6 +11,7 @@ Pyramidev website. Astro 6 (static) + Tailwind 4 + TypeScript strict. Zero frame
 | `npm run build` | Static build to `dist/` |
 | `npm run preview` | Preview the build |
 | `npm run check` | `astro check` (types and templates) |
+| `npm run build && node --test 'src/**/*.test.mjs'` | FAQ tests (provenance and JSON-LD; run after a build) |
 
 ## Brand tokens
 
@@ -36,6 +37,10 @@ One module for contact data and integration hooks. Contact details and the Whats
 
 - `SCHEDULER_URL` (TODO(config)): booking link (Cal.com, Calendly, ...). Empty by default, so every "Agenda una llamada" button goes to `/contacto`. When set, all of them open it in a new tab (`rel="noopener"`).
 - `ANALYTICS.cloudflareToken` (TODO(config)): Cloudflare Web Analytics site token. Empty by default, so nothing is rendered. When set, `BaseLayout` adds the cookieless beacon script.
+
+## Home FAQ (`src/data/faq.ts`)
+
+The home FAQ, its FAQPage JSON-LD and the risk-reducer line under the hero CTA come from one module. Copy is plain es-MX in the site's «tú» register, two or three short sentences per answer. Each answer declares the facts it uses (figures, named options, legal entity, key commitments), each tied to a key of the workspace `templates/data/terms.json` (source of truth for Pyramidev services) or a repository file. `src/data/faq.test.mjs` checks that every fact equals its source and appears in the answer, that every number in an answer is a declared fact, and that the built JSON-LD matches the rendered FAQ (the source checks are skipped where `terms.json` is absent, as in the public repository). To change an answer, change `terms.json` first. `public/llms.txt` describes Pyramidev with the same facts.
 
 ## Case imagery
 

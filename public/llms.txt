@@ -1,0 +1,32 @@
+# Pyramidev
+
+> Pyramidev Technologies, S.A. de C.V. es una empresa de desarrollo de software a la medida en la Ciudad de México. Diseña y construye sistemas para operaciones que no pueden detenerse: estacionamientos, pagos, control de acceso y operación de punta a punta.
+
+- Equipo con más de 10 años desarrollando software.
+- Trabaja con pocos clientes y en proyectos grandes, principalmente en aeropuertos de México y gobierno.
+- Por acuerdos de confidencialidad no publica el nombre de todos sus clientes; esos casos se describen sin identificar a quien los contrató.
+- Entrega por etapas: alcance por etapas, con tiempos y costo para cada una. Cada hito de pago queda ligado a una aceptación por escrito, no a una fecha del calendario.
+- En desarrollos a la medida, el código fuente y los derechos sobre el producto entregado se transfieren al cliente una vez liquidado el pago total.
+- Precios en pesos mexicanos (MXN).
+
+## Servicios
+
+- [Desarrollo de software a la medida](https://www.pyramidev.com.mx/servicios#desarrollo-a-medida): sistemas web, móviles y de escritorio diseñados para el proceso del cliente.
+- [Sistemas para estacionamientos](https://www.pyramidev.com.mx/servicios#estacionamientos): boletos, tarifas, cobro, cortes de caja y reportes.
+- [Integración de pagos y facturación](https://www.pyramidev.com.mx/servicios#pagos): cobros con tarjeta (Getnet, BBVA) y en línea, conciliación y facturación electrónica CFDI 4.0.
+- [Quioscos y control de acceso](https://www.pyramidev.com.mx/servicios#quioscos-acceso): quioscos de autoservicio y dispositivos de acceso con RFID y barreras.
+- [Gestión de reportes y control](https://www.pyramidev.com.mx/servicios#control-reportes): reportes oficiales que cuadran al centavo, permisos por rol y bitácoras que no se pueden alterar.
+- [Sistemas de operación de punta a punta](https://www.pyramidev.com.mx/servicios#operacion-integral): sistemas que reemplazan hojas de cálculo y dan seguimiento al cliente final.
+
+## Productos y casos
+
+- [Casos de estudio](https://www.pyramidev.com.mx/casos): proyectos reales; los clientes no públicos se describen sin nombre.
+- Ticketax y Livilinq son productos de Pyramidev.
+
+## Contacto
+
+- Correo: hola@pyramidev.com.mx
+- Teléfono y WhatsApp: +52 55 4535 1951
+- [Contacto](https://www.pyramidev.com.mx/contacto)
+- [Nosotros](https://www.pyramidev.com.mx/nosotros)
+- [Preguntas frecuentes](https://www.pyramidev.com.mx/#preguntas-frecuentes)

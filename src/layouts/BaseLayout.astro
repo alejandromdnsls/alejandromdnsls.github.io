@@ -1,12 +1,15 @@
 ---
 import '../styles/global.css';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
-import { ANALYTICS, CONTACT, SITE_URL } from '../data/site';
+import ConsentBanner from '../components/legal/ConsentBanner.astro';
+import { CONTACT, SITE_URL } from '../data/site';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Extra JSON-LD objects (e.g. BreadcrumbList, Service), each rendered after the Organization block. */
+  structuredData?: Record<string, unknown>[];
 }
 
 const SITE_NAME = 'Pyramidev';
@@ -14,6 +17,7 @@ const {
   title = 'Pyramidev | Software para operaciones críticas',
   description = 'Desarrollamos software para operaciones críticas: estacionamientos, pagos, control de acceso y sistemas de operación de punta a punta. CDMX.',
   ogImage = '/og-image.png',
+  structuredData = [],
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -98,11 +102,13 @@ const jsonLd = {
       })();
     </script>
 
-    {ANALYTICS.cloudflareToken && (
-      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: ANALYTICS.cloudflareToken })}></script>
-    )}
+    {/* Non-essential tags load only after opt-in through the consent banner; nothing renders without a configured tool. */}
+    <ConsentBanner part="head" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    {structuredData.map((data) => (
+      <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', ...data })} />
+    ))}
   </head>
   <body class="min-h-screen flex flex-col">
     <a
@@ -117,5 +123,6 @@ const jsonLd = {
     </main>
     <slot name="footer" />
     <WhatsAppButton />
+    <ConsentBanner part="body" />
   </body>
 </html>

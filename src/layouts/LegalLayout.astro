@@ -8,17 +8,19 @@ interface Props {
   title: string;
   description: string;
   heading: string;
+  /** Version of the text (data/legal.ts); printed with the date. */
+  version: string;
   updated: string;
 }
-const { title, description, heading, updated } = Astro.props;
+const { title, description, heading, version, updated } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
   <Header slot="header" />
   <Container size="md" class="py-16 lg:py-24">
     <h1 class="text-[2rem] sm:text-[2.5rem]">{heading}</h1>
-    <p class="mt-3 text-sm text-fg-muted">Última actualización: {updated}</p>
-    <article class="legal mt-8">
+    <p class="mt-3 text-sm text-fg-muted">Versión {version} · Última actualización: {updated}</p>
+    <article class="legal mt-8" data-version={version}>
       <slot />
     </article>
   </Container>

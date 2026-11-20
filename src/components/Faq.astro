@@ -1,0 +1,49 @@
+---
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+import { FAQ } from '../data/faq';
+
+// Native <details>: works without JavaScript and with the keyboard. The same text feeds the
+// FAQPage JSON-LD (faqPageJsonLd), so both always match.
+---
+
+<Section id="preguntas-frecuentes">
+  <div class="grid gap-10 lg:grid-cols-3">
+    <div class="lg:col-span-1">
+      <SectionHeader eyebrow="Preguntas frecuentes" title="Lo que nos preguntan antes de empezar" />
+    </div>
+    <div class="divide-y divide-line border-y border-line lg:col-span-2">
+      {FAQ.map((item) => (
+        <details class="faq-item group">
+          <summary class="flex min-h-11 cursor-pointer list-none items-start justify-between gap-6 py-5 text-lg text-fg [&::-webkit-details-marker]:hidden">
+            <span data-faq-question>{item.question}</span>
+            <svg class="faq-chevron mt-1 size-5 shrink-0 text-link-base" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m5 8 5 5 5-5" />
+            </svg>
+          </summary>
+          <p data-faq-answer class="pb-6 pr-11 text-fg-muted">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</Section>
+
+<style>
+  .faq-item summary span {
+    text-wrap: balance;
+  }
+  .faq-item p {
+    text-wrap: pretty;
+  }
+  .faq-chevron {
+    transition: transform 0.2s ease-out;
+  }
+  .faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-chevron {
+      transition: none;
+    }
+  }
+</style>

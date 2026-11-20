@@ -28,8 +28,14 @@ export const schedulerLink = SCHEDULER_URL
 
 /**
  * TODO(config): analytics. Empty = nothing is rendered.
- * `cloudflareToken` is the Cloudflare Web Analytics site token (cookieless).
+ * `cloudflareToken` is the Cloudflare Web Analytics site token (cookieless). When set, the beacon
+ * is written inert and loads only after the visitor accepts analytics in the consent banner
+ * (components/legal/ConsentBanner.astro); the cookie policy and the privacy notice then list it.
+ * Bump COOKIE_POLICY and PRIVACY_NOTICE in data/legal.ts when this changes.
  */
 export const ANALYTICS = {
   cloudflareToken: '',
 } as const;
+
+/** True when a non-essential tool is configured: the consent banner and «Configurar cookies» render only then. */
+export const HAS_NON_ESSENTIAL: boolean = Boolean(ANALYTICS.cloudflareToken);

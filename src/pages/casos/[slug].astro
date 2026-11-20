@@ -18,11 +18,25 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
-const { title, sector, kind, summary, services, stack, url, images } = entry.data;
+const { title, sector, kind, summary, seoTitle, seoDescription, services, stack, url, images } = entry.data;
 const related = SERVICES.filter((s) => services.includes(s.slug));
+
+const breadcrumb = {
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { name: 'Inicio', path: '/' },
+    { name: 'Casos de estudio', path: '/casos/' },
+    { name: title, path: `/casos/${entry.id}/` },
+  ].map((item, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: item.name,
+    item: new URL(item.path, Astro.site).href,
+  })),
+};
 ---
 
-<BaseLayout title={`${title} | Pyramidev`} description={summary}>
+<BaseLayout title={seoTitle ?? `${title} | Pyramidev`} description={seoDescription ?? summary} structuredData={[breadcrumb]}>
   <Header slot="header" />
 
   <PageHeader

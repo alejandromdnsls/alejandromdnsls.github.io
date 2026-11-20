@@ -5,6 +5,7 @@ kind: cliente
 services: [operacion-integral]
 stack: [NestJS, PostgreSQL, React]
 summary: ERP a la medida para cotizar, producir, surtir y cobrar, con inventario, compras, CRM y control de flotilla.
+seoTitle: "Cobaempak: ERP a la medida para empaques | Pyramidev"
 url: https://cobaempak.com/
 images:
   - src: ../../assets/cases/cobaempak/sitio-inicio.png

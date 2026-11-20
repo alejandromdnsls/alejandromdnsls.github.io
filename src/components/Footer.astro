@@ -1,6 +1,7 @@
 ---
 import Container from './Container.astro';
-import { CONTACT, WHATSAPP_URL } from '../data/site';
+import { CONTACT, HAS_NON_ESSENTIAL, WHATSAPP_URL } from '../data/site';
+import { COMPANY } from '../data/legal';
 
 const year = new Date().getFullYear();
 const NAV_LINKS = [
@@ -11,7 +12,8 @@ const NAV_LINKS = [
 ];
 const LEGAL_LINKS = [
   { label: 'Aviso de privacidad', href: '/aviso-de-privacidad' },
-  { label: 'Términos y condiciones', href: '/terminos' },
+  { label: 'Política de cookies', href: '/politica-de-cookies' },
+  { label: 'Términos de uso', href: '/terminos' },
 ];
 const link = 'text-sm text-[var(--pv-lilac)] transition-colors duration-150 hover:text-white';
 ---
@@ -45,9 +47,16 @@ const link = 'text-sm text-[var(--pv-lilac)] transition-colors duration-150 hove
     </div>
 
     <div class="mt-12 flex flex-col gap-4 border-t border-[var(--pv-ink-line)] pb-16 pt-6 sm:flex-row sm:pb-0 sm:pr-20 sm:items-center sm:justify-between">
-      <p class="text-sm text-[var(--pv-lilac)]">© {year} Pyramidev. Todos los derechos reservados.</p>
-      <ul class="flex gap-6">
+      <div class="space-y-1">
+        <p class="text-sm text-[var(--pv-lilac)]">© {year} Pyramidev. Todos los derechos reservados.</p>
+        {/* TODO(legal): confirm which domicile the site must publish (today without «Interior 302», per the workspace CLAUDE.md). */}
+        <p class="text-sm text-[var(--pv-lilac)]">{COMPANY.legalName} · RFC {COMPANY.rfc} · {COMPANY.address}</p>
+      </div>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2">
         {LEGAL_LINKS.map((l) => <li><a class={link} href={l.href}>{l.label}</a></li>)}
+        {HAS_NON_ESSENTIAL && (
+          <li><a class={link} href="/politica-de-cookies#configurar" data-consent-open>Configurar cookies</a></li>
+        )}
       </ul>
     </div>
   </Container>

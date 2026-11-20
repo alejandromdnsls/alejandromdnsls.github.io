@@ -8,10 +8,12 @@ import { schedulerLink } from '../data/site';
 import Button from '../components/Button.astro';
 import CaseCard from '../components/CaseCard.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Watermark from '../components/Watermark.astro';
 import TechMarquee from '../components/TechMarquee.astro';
 import { SERVICES } from '../data/services';
+import { RISK_REDUCER, faqPageJsonLd } from '../data/faq';
 
 const featured = sortCases(await getPublishedCases((c) => c.data.featured));
 
@@ -26,7 +28,7 @@ const STEPS = [
 ];
 ---
 
-<BaseLayout>
+<BaseLayout structuredData={[faqPageJsonLd()]}>
   <Header slot="header" />
 
   <section class="bg-brand-dark relative overflow-hidden text-white">
@@ -41,6 +43,7 @@ const STEPS = [
         <Button {...schedulerLink} class="px-7 py-4 text-base">Agenda una llamada</Button>
         <Button href="/casos" variant="secondary-dark" class="px-7 py-4 text-base">Ver casos de estudio</Button>
       </div>
+      <p data-risk-reducer class="mt-5 max-w-2xl text-sm text-[var(--pv-lilac)]">{RISK_REDUCER.text}</p>
       <p class="mt-16 border-t border-[var(--pv-ink-line)] pt-5 text-sm font-medium text-[var(--pv-sky)] lg:mt-24">
         Aeropuertos en México <span aria-hidden="true">·</span><span class="sr-only">,</span> Gobierno <span aria-hidden="true">·</span><span class="sr-only">,</span> Estacionamientos <span aria-hidden="true">·</span><span class="sr-only">y</span> Industria
       </p>
@@ -132,6 +135,8 @@ const STEPS = [
       </div>
     </div>
   </Section>
+
+  <Faq />
 
   <CtaBand />
 

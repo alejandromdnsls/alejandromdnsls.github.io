@@ -11,6 +11,7 @@ import Select from '../components/form/Select.astro';
 import Checkbox from '../components/form/Checkbox.astro';
 import { PROJECT_TYPES } from '../data/services';
 import { CONTACT, WHATSAPP_URL } from '../data/site';
+import { COMPANY, CONTACT_FORM_ID, PRIVACY_NOTICE } from '../data/legal';
 
 const FORM_ENDPOINT = 'https://formspree.io/f/mblzylqa';
 ---
@@ -51,9 +52,18 @@ const FORM_ENDPOINT = 'https://formspree.io/f/mblzylqa';
             <input id="_gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
           </div>
 
-          <Checkbox id="consentimiento" name="consentimiento" required>
+          {/* Simplified privacy notice (templates/legal/sitios/aviso-privacidad-simplificado.html); it must match the integral notice and the fields above. */}
+          <p class="text-sm font-light text-fg-muted">
+            {COMPANY.legalName}, con domicilio en {COMPANY.address}, es responsable de los datos personales que usted proporcione en este formulario: nombre, empresa, correo electrónico, teléfono, tipo de proyecto y su mensaje. Los usaremos para responder a su solicitud y darle seguimiento por el medio que eligió. Puede limitar el uso de sus datos o ejercer sus derechos escribiendo a <a href={`mailto:${CONTACT.email}`} class="text-link-base underline underline-offset-4 hover:text-link-hover">{CONTACT.email}</a>. Consulte el <a href="/aviso-de-privacidad" class="text-link-base underline underline-offset-4 hover:text-link-hover">aviso de privacidad integral</a>.
+          </p>
+
+          <Checkbox id="consentimiento" name="consentimiento_privacidad" value="si" required>
             He leído el <a href="/aviso-de-privacidad" class="text-link-base underline underline-offset-4 hover:text-link-hover">aviso de privacidad</a> y acepto que Pyramidev use mis datos para responder a esta solicitud.
           </Checkbox>
+
+          {/* Consent record (registro-consentimientos.md): each Formspree submission carries the notice version and the form id. */}
+          <input type="hidden" name="aviso_version" value={PRIVACY_NOTICE.version} />
+          <input type="hidden" name="formulario" value={CONTACT_FORM_ID} />
 
           <div id="form-status" role="status" aria-live="polite" class="text-base"></div>
 
