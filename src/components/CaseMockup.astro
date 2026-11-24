@@ -1,0 +1,57 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BrowserFrame from './BrowserFrame.astro';
+import PhoneFrame from './PhoneFrame.astro';
+
+interface Props {
+  /** Case screenshots: the first landscape one goes in a browser frame, the first portrait one in a device frame beside it. */
+  images: { src: ImageMetadata; alt: string }[];
+  /** Site of the product or client, shown in the address bar. */
+  url?: string;
+  onDark?: boolean;
+  /** Approximate rendered width of the whole mockup at desktop, for responsive `sizes`. */
+  width?: number;
+  eager?: boolean;
+  /** Decorative copy (e.g. a link card that already names the case): empty alt text. */
+  decorative?: boolean;
+  class?: string;
+}
+const { images, url, onDark = false, width = 640, eager = false, decorative = false, class: className = '' } = Astro.props;
+const screen = images.find((i) => i.src.width > i.src.height);
+const app = images.find((i) => i.src.width <= i.src.height);
+const loading = eager ? 'eager' : 'lazy';
+// Browser takes 10 of 12 columns when a phone sits beside it, all 12 otherwise.
+const browserWidth = Math.round(app ? (width * 10) / 12 : width);
+const phoneWidth = Math.round((width * 3) / 12);
+---
+
+{screen && (
+  <div class:list={['grid grid-cols-12 items-start', className]}>
+    <BrowserFrame url={url} onDark={onDark} class:list={['row-start-1', app ? 'col-start-1 col-end-11' : 'col-span-12']}>
+      <Picture
+        src={screen.src}
+        alt={decorative ? '' : screen.alt}
+        widths={[400, 640, 960, 1280]}
+        sizes={`(min-width: 1024px) ${browserWidth}px, ${app ? '83vw' : '100vw'}`}
+        formats={['avif', 'webp']}
+        class="block h-auto w-full"
+        loading={loading}
+        fetchpriority={eager ? 'high' : undefined}
+      />
+    </BrowserFrame>
+    {app && (
+      <PhoneFrame class="relative z-10 col-start-10 col-end-13 row-start-1 mt-[38%]">
+        <Picture
+          src={app.src}
+          alt={decorative ? '' : app.alt}
+          widths={[160, 240, 320]}
+          sizes={`(min-width: 1024px) ${phoneWidth}px, 25vw`}
+          formats={['avif', 'webp']}
+          class="block h-auto w-full"
+          loading={loading}
+        />
+      </PhoneFrame>
+    )}
+  </div>
+)}

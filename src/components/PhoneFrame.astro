@@ -1,0 +1,13 @@
+---
+interface Props {
+  class?: string;
+}
+// Device frame for portrait app screens. Restrained on purpose: 8px radius (the brand maximum),
+// flat ink bezel, no notch or reflections.
+const { class: className = '' } = Astro.props;
+---
+
+<div class:list={['frame-phone', className]}>
+  <span class="frame-phone-speaker" aria-hidden="true"></span>
+  <div><slot /></div>
+</div>

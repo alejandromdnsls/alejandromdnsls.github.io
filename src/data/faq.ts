@@ -34,6 +34,7 @@ export interface FaqItem {
 }
 
 const HOME = 'web/src/pages/index.astro';
+const PROCESS = 'web/src/data/process.ts';
 const CONTACT_PAGE = 'web/src/pages/contacto.astro';
 const CTA_BAND = 'web/src/components/CtaBand.astro';
 const QUOTE = 'templates/software/cotizacion.html';
@@ -47,7 +48,7 @@ export const FAQ: FaqItem[] = [
     answer:
       'Cotizamos por etapas: cada una con su alcance, tiempo y costo. Si algo cambia, te lo cotizamos por escrito con su impacto en costo y en tiempo, y no se hace nada sin tu aprobación por escrito. Después de la entrega, cada cambio se cotiza a la tarifa por hora vigente.',
     facts: [
-      file(HOME, 'alcance por etapas, con tiempos y costo para cada una', 'por etapas'),
+      file(PROCESS, 'alcance por etapas, con tiempos y costo para cada una', 'por etapas'),
       term('change_control.rule', 'impacto en costo y en tiempo'),
       term('change_control.rule', 'aprobación por escrito'),
       term('change_options.options.0.description', 'tarifa por hora vigente'),
@@ -84,7 +85,7 @@ export const FAQ: FaqItem[] = [
     answer:
       'Entregamos por etapas para que pruebes cada avance con tu equipo, y tienes 5 días hábiles para revisar cada hito. Cada pago depende de tu aceptación por escrito, no de una fecha del calendario. Si la información, los accesos o las aprobaciones de tu lado se retrasan, las fechas se recorren día por día sin cambio en el precio.',
     facts: [
-      file(HOME, 'Entregamos por etapas'),
+      file(PROCESS, 'Entregamos por etapas'),
       term('acceptance.review_days', 5, '5 días hábiles'),
       term('acceptance.rule', 'fecha del calendario'),
       term('delays.client_caused', 'día por día sin cambio en el precio'),
@@ -121,7 +122,7 @@ export const FAQ: FaqItem[] = [
     answer:
       'Con una llamada: platicamos con quienes operan el proceso hoy y te proponemos un plan de trabajo con alcance y tiempos. La cotización tiene vigencia de 15 días naturales y el proyecto arranca con el anticipo, al firmar.',
     facts: [
-      file(HOME, 'Platicamos con quienes operan el proceso hoy'),
+      file(PROCESS, 'Platicamos con quienes operan el proceso hoy'),
       file(CTA_BAND, 'te proponemos un plan de trabajo con alcance y tiempos'),
       term('quote.validity_days', 15, '15 días naturales'),
       term('payment.milestones.0.label', 'Anticipo'),
@@ -139,12 +140,68 @@ export const FAQ: FaqItem[] = [
 export const RISK_REDUCER: { text: string; facts: FaqFact[] } = {
   text: 'Cotizamos por etapas, cada pago depende de tu aceptación por escrito y el código es tuyo al liquidar el pago total.',
   facts: [
-    file(HOME, 'alcance por etapas', 'por etapas'),
+    file(PROCESS, 'alcance por etapas', 'por etapas'),
     term('acceptance.rule', 'Cada hito de pago queda ligado a una aceptación', 'cada pago depende de tu aceptación'),
     term('acceptance.rule', 'por escrito'),
     term('ip.custom', 'liquidado el pago total', 'liquidar el pago total'),
   ],
 };
+
+export interface RiskItem {
+  title: string;
+  text: string;
+  facts: FaqFact[];
+}
+
+/**
+ * Risk-reducer section of the home page: what Pyramidev commits to in every custom development,
+ * stated only with terms that exist in terms.json (or a cited repository file). Each item is
+ * checked like an FAQ answer by faq.test.mjs; numbers in the title must be declared facts too.
+ */
+export const RISK_ITEMS: RiskItem[] = [
+  {
+    title: 'Pagas contra entregas aceptadas',
+    text: 'Cada hito de pago queda ligado a tu aceptación por escrito, no a una fecha del calendario.',
+    facts: [
+      term('acceptance.rule', 'Cada hito de pago queda ligado a una aceptación', 'Cada hito de pago queda ligado a tu aceptación'),
+      term('acceptance.rule', 'por escrito'),
+      term('acceptance.rule', 'fecha del calendario'),
+    ],
+  },
+  {
+    title: 'Tiempo para revisar cada avance',
+    text: 'Tienes 5 días hábiles para revisar cada hito con tu equipo antes de aceptarlo.',
+    facts: [term('acceptance.review_days', 5, '5 días hábiles')],
+  },
+  {
+    title: 'El código es tuyo',
+    text: 'En desarrollos a la medida, el código fuente y los derechos sobre lo que entregamos pasan a ti al liquidar el pago total.',
+    facts: [
+      term('ip.custom', 'En desarrollos a la medida'),
+      term('ip.custom', 'el código fuente y los derechos'),
+      term('ip.custom', 'liquidado el pago total', 'liquidar el pago total'),
+    ],
+  },
+  {
+    title: '90 días de garantía',
+    text: 'Corregimos defectos frente al alcance aceptado durante 90 días naturales desde la aceptación final.',
+    facts: [
+      term('warranty.days', 90, '90 días naturales'),
+      term('warranty.coverage', 'frente al alcance aceptado'),
+      file(QUOTE, 'posteriores a la aceptación final', 'desde la aceptación final'),
+    ],
+  },
+  {
+    title: 'Ningún cambio sin tu aprobación',
+    text: 'Cada cambio de alcance se cotiza por escrito con su impacto en costo y en tiempo, y no se hace sin tu aprobación por escrito.',
+    facts: [term('change_control.rule', 'impacto en costo y en tiempo'), term('change_control.rule', 'aprobación por escrito')],
+  },
+  {
+    title: 'Retrasos sin costo extra',
+    text: 'Si la información, los accesos o las aprobaciones de tu lado se retrasan, las fechas se recorren día por día sin cambio en el precio.',
+    facts: [term('delays.client_caused', 'día por día sin cambio en el precio')],
+  },
+];
 
 export const faqPageJsonLd = (items: FaqItem[] = FAQ): Record<string, unknown> => ({
   '@type': 'FAQPage',

@@ -1,7 +1,7 @@
 ---
 import Section from './Section.astro';
 import Button from './Button.astro';
-import { schedulerLink } from '../data/site';
+import { CONTACT, WHATSAPP_URL, schedulerLink } from '../data/site';
 
 interface Props {
   title?: string;
@@ -16,14 +16,20 @@ const {
 ---
 
 <!-- Brand blue band; the footer below is Base Oscura so the two never merge. White text on blue is 5.94:1. -->
-<Section tone="brand" size="xl" class="py-16 lg:py-20">
-  <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-    <div class="max-w-2xl">
+<Section tone="brand" size="xl" class="py-16 lg:py-24">
+  <div class="grid gap-10 lg:grid-cols-12 lg:items-end">
+    <div class="lg:col-span-7">
       <h2 class="text-headline">{title}</h2>
-      <p class="mt-4 text-lg text-white">{text}</p>
+      <p class="mt-4 max-w-xl text-lg text-white">{text}</p>
     </div>
-    <div class="shrink-0">
+    <div class="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
       <Button {...schedulerLink} variant="inverse" class="px-7 py-4 text-base">{label}</Button>
+      <Button href={WHATSAPP_URL} target="_blank" rel="noopener" variant="outline-white" class="px-7 py-4 text-base">Escríbenos por WhatsApp</Button>
     </div>
   </div>
+  <ul class="mt-12 flex flex-col gap-3 border-t border-white pt-6 text-sm text-white sm:flex-row sm:flex-wrap sm:gap-x-10">
+    <li><a class="underline-offset-4 hover:underline" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+    <li><a class="underline-offset-4 hover:underline" href={`tel:${CONTACT.phone.tel}`}>{CONTACT.phone.display}</a></li>
+    <li>{CONTACT.location}</li>
+  </ul>
 </Section>

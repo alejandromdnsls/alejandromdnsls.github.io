@@ -1,0 +1,19 @@
+---
+interface Props {
+  /** Hostname shown in the address bar (decorative; the screenshot carries the alt text). */
+  url?: string;
+  /** Use the dark line tokens when the frame sits on an always-dark band. */
+  onDark?: boolean;
+  class?: string;
+}
+const { url, onDark = false, class: className = '' } = Astro.props;
+const host = url ? new URL(url).hostname.replace(/^www\./, '') : undefined;
+---
+
+<div class:list={['frame-browser', onDark && 'frame-on-dark', className]}>
+  <div class="frame-browser-bar" aria-hidden="true">
+    <span class="frame-dots"><span></span><span></span><span></span></span>
+    {host && <span class="frame-url">{host}</span>}
+  </div>
+  <slot />
+</div>

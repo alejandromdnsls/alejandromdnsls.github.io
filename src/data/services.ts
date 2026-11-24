@@ -1,6 +1,8 @@
 export interface Service {
   slug: string;
   title: string;
+  /** Short label for the in-page section nav of /servicios. */
+  navLabel: string;
   short: string;
   description: string;
   components: string[];
@@ -14,6 +16,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'desarrollo-a-medida',
     title: 'Desarrollo de software a la medida',
+    navLabel: 'A la medida',
     short: 'Sistemas web, móviles y de escritorio diseñados para tu proceso, no para el de otra empresa.',
     description:
       'Construimos el software que tu operación necesita cuando lo que hay en el mercado no alcanza. Partimos de tu proceso real, entregamos por etapas y dejamos el sistema documentado y listo para que crezca contigo.',
@@ -30,6 +33,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'estacionamientos',
     title: 'Sistemas para estacionamientos',
+    navLabel: 'Estacionamientos',
     short: 'Software para operar estacionamientos: boletos, tarifas, cobro, cortes de caja y reportes.',
     description:
       'Sistemas para operadores de estacionamientos públicos y privados. Cubren desde la entrada y salida de vehículos hasta el corte de caja y los reportes que exige la operación y la administración.',
@@ -45,6 +49,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'pagos',
     title: 'Integración de pagos y facturación',
+    navLabel: 'Pagos y facturación',
     short: 'Cobros con tarjeta (Getnet, BBVA) y en línea, conciliación y facturación electrónica CFDI 4.0.',
     description:
       'Conectamos tu sistema con procesadores de pago, incluidos cobros con tarjeta (Getnet, BBVA), y con el SAT a través de un proveedor autorizado (PAC), para que cada cobro quede registrado, conciliado y, cuando aplica, facturado.',
@@ -61,6 +66,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'quioscos-acceso',
     title: 'Quioscos y control de acceso',
+    navLabel: 'Quioscos y acceso',
     short: 'Software para quioscos de autoservicio y dispositivos de acceso con RFID y barreras.',
     description:
       'Software que conecta la operación con dispositivos físicos: quioscos de autoservicio, lectores, barreras y controladores pequeños. Cuando la operación lo requiere, el dispositivo trabaja sin conexión y se sincroniza con la nube al recuperarla.',
@@ -74,23 +80,9 @@ export const SERVICES: Service[] = [
     cases: ['livilinq'],
   },
   {
-    slug: 'impresion-etiquetas',
-    title: 'Equipo de impresión y etiquetas',
-    short: 'Impresoras térmicas, etiquetas autoadheribles con QR y consumibles, instalados y calibrados para tu operación.',
-    description:
-      'Suministramos y dejamos funcionando el equipo de impresión que tu operación necesita: impresoras térmicas para tickets y etiquetas, y las etiquetas autoadheribles con el QR de cada sucursal o caja, listas para pegar. Se cotiza según el número de cajas, sucursales y equipos.',
-    components: [
-      'Etiquetas autoadheribles con el QR de cada sucursal o caja',
-      'Impresoras térmicas para tickets y etiquetas, con conexión USB o Ethernet',
-      'Instalación, calibración y capacitación de tu equipo',
-      'Rollos y consumibles para reposición',
-      'Garantía del fabricante en el equipo',
-    ],
-    cases: ['ticketax'],
-  },
-  {
     slug: 'control-reportes',
     title: 'Gestión de reportes y control',
+    navLabel: 'Reportes y control',
     short: 'Gestión de reportes oficiales que cuadran al centavo, con permisos por rol y bitácoras que no se pueden alterar.',
     description:
       'La gestión de reportes es el corazón de una operación auditada: cada cifra debe poder explicarse. Construimos reportes que cuadran al centavo contra la base de datos, con permisos por rol, firma digital y registro de cada cambio.',
@@ -101,11 +93,12 @@ export const SERVICES: Service[] = [
       'Bitácora de auditoría a prueba de alteraciones',
       'Reconstrucción de sistemas heredados sin documentación',
     ],
-    cases: ['operador-aeropuerto'],
+    cases: ['operador-aeropuerto', 'ticketax'],
   },
   {
     slug: 'operacion-integral',
     title: 'Sistemas de operación de punta a punta',
+    navLabel: 'Operación de punta a punta',
     short: 'Sistemas a la medida que reemplazan hojas de cálculo y dan seguimiento al cliente final.',
     description:
       'Sistemas que cubren un proceso completo, desde que entra la solicitud hasta que se cobra, y que permiten al cliente final consultar el avance sin tener que llamar. Incluye ERP a la medida para empresas con procesos propios.',

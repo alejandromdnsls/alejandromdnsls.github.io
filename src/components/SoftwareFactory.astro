@@ -1,0 +1,544 @@
+---
+// Home hero illustration: an original isometric «software factory».
+// Upper slab: a parking and access operation (office with rooftop units, lane with a barrier, ticket
+// totem and plate reader, canopy, cashier booth, payment kiosk, cars, people). Lower, translucent
+// diamond: the software layer (phone lying flat, server rack, laptop, dashboard monitor, router, people).
+// Straight light beams drop from objects on the slab to the devices below, with data packets on them.
+//
+// All geometry is generated here from world coordinates with an isometric projection, so every shape
+// is our own. Repeated parts are groups in <defs> reused with <use>. Colors are brand tokens only
+// (classes, no fill attributes); the hero band is always dark, in both themes. Motion is CSS only
+// (transform/opacity), paused off screen and removed under prefers-reduced-motion.
+
+const S = 4;
+const C = 0.8660254;
+type V = [number, number];
+// The upper slab is laid out on a 60x60 plan (35..95) and drawn K times larger around its back
+// corner, so it reads big against the lower diamond like a floating operation deck.
+const UZ = 64; // top of the slab
+const UB = 57; // underside of the slab (plan units)
+const K = 1.18;
+let upperScale = false;
+const P = (x: number, y: number, z: number): V => {
+  if (upperScale) {
+    x = 30 + (x - 35) * K;
+    y = 30 + (y - 35) * K;
+    z = UZ + (z - UZ) * K;
+  }
+  return [(x - y) * C * S, (x + y) * 0.5 * S - z * S];
+};
+/** Screen vector of a world displacement (independent of the slab offset). */
+const vec = (dx: number, dy: number, dz: number): V => {
+  const a = P(dx, dy, dz);
+  const o = P(0, 0, 0);
+  return [a[0] - o[0], a[1] - o[1]];
+};
+const n = (v: number) => Math.round(v * 10) / 10;
+const pt = (p: V) => `${n(p[0])},${n(p[1])}`;
+const pg = (a: V[], cls: string, extra = '') => `<polygon points="${a.map(pt).join(' ')}" class="${cls}"${extra}/>`;
+const pl = (a: V[], cls: string, extra = '') => `<polyline points="${a.map(pt).join(' ')}" class="${cls}"${extra}/>`;
+
+/** Axis-aligned box: top, left (y+d) and right (x+w) faces, three tones, plus a thin edge highlight. */
+const box = (x: number, y: number, z: number, w: number, d: number, h: number, k: string, edge = true) => {
+  const T = z + h;
+  const top = pg([P(x, y, T), P(x + w, y, T), P(x + w, y + d, T), P(x, y + d, T)], 't');
+  const left = pg([P(x, y + d, T), P(x + w, y + d, T), P(x + w, y + d, z), P(x, y + d, z)], 'l');
+  const right = pg([P(x + w, y, T), P(x + w, y + d, T), P(x + w, y + d, z), P(x + w, y, z)], 'r');
+  const edges = edge ? pl([P(x, y + d, T), P(x + w, y + d, T), P(x + w, y, T)], 'e') + pl([P(x + w, y + d, T), P(x + w, y + d, z)], 'e') : '';
+  return `<g class="k-${k}">${top}${left}${right}${edges}</g>`;
+};
+/** Quad on a horizontal plane. */
+const flat = (x: number, y: number, z: number, w: number, d: number, cls: string, extra = '') => pg([P(x, y, z), P(x + w, y, z), P(x + w, y + d, z), P(x, y + d, z)], cls, extra);
+/** Quad on a vertical plane facing +y (screen left). */
+const qy = (x: number, y: number, z: number, w: number, h: number, cls: string, extra = '') => pg([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y, z), P(x, y, z)], cls, extra);
+/** Quad on a vertical plane facing +x (screen right). */
+const qx = (x: number, y: number, z: number, d: number, h: number, cls: string, extra = '') => pg([P(x, y, z + h), P(x, y + d, z + h), P(x, y + d, z), P(x, y, z)], cls, extra);
+/** Circle on a plane: the unit circle mapped by the plane's two axes. */
+const circ = (o: V, ax: V, ay: V, cls: string, extra = '') => `<circle r="1" class="${cls}" transform="matrix(${n(ax[0])} ${n(ax[1])} ${n(ay[0])} ${n(ay[1])} ${n(o[0])} ${n(o[1])})"${extra}/>`;
+const circTop = (x: number, y: number, z: number, r: number, cls: string) => circ(P(x, y, z), [C * S * r, 0.5 * S * r], [-C * S * r, 0.5 * S * r], cls);
+const circY = (x: number, y: number, z: number, r: number, cls: string) => circ(P(x, y, z), [C * S * r, 0.5 * S * r], [0, -S * r], cls);
+const circX = (x: number, y: number, z: number, r: number, cls: string, extra = '') => circ(P(x, y, z), [-C * S * r, 0.5 * S * r], [0, -S * r], cls, extra);
+const use = (id: string, p: V, cls = '', extra = '', k = 1) => {
+  const sc = (upperScale ? K : 1) * k;
+  const place = sc === 1 ? `x="${n(p[0])}" y="${n(p[1])}"` : `transform="translate(${n(p[0])} ${n(p[1])}) scale(${n(sc * 100) / 100})"`;
+  return `<use href="#${id}" ${place}${cls ? ` class="${cls}"` : ''}${extra}/>`;
+};
+
+// ── Reusable parts (built at the origin; placed with <use> at P(x, y, z)) ──────────────────────────
+const carX = [
+  box(0, 0, 0.7, 12, 5.6, 2.6, 'car'),
+  box(3, 0.5, 3.3, 6.2, 4.6, 2.2, 'car'),
+  qy(3.4, 5.12, 3.6, 2.5, 1.6, 'win'),
+  qy(6.3, 5.12, 3.6, 2.5, 1.6, 'win'),
+  qx(9.22, 0.9, 3.6, 3.8, 1.6, 'win'),
+  qx(12.02, 0.6, 1.2, 4.4, 0.5, 'grille'),
+  circY(2.6, 5.62, 1, 0.95, 'tire'), circY(2.6, 5.64, 1, 0.4, 'hub'),
+  circY(9.4, 5.62, 1, 0.95, 'tire'), circY(9.4, 5.64, 1, 0.4, 'hub'),
+  circX(12.04, 1.2, 2.2, 0.45, 'lamp'), circX(12.04, 4.4, 2.2, 0.45, 'lamp'),
+].join('');
+const carY = [
+  box(0, 0, 0.7, 5.6, 12, 2.6, 'car'),
+  box(0.5, 3, 3.3, 4.6, 6.2, 2.2, 'car'),
+  qx(5.12, 3.4, 3.6, 2.5, 1.6, 'win'),
+  qx(5.12, 6.3, 3.6, 2.5, 1.6, 'win'),
+  qy(0.9, 9.22, 3.6, 3.8, 1.6, 'win'),
+  qy(0.6, 12.02, 1.2, 4.4, 0.5, 'grille'),
+  circX(5.62, 2.6, 1, 0.95, 'tire'), circX(5.64, 2.6, 1, 0.4, 'hub'),
+  circX(5.62, 9.4, 1, 0.95, 'tire'), circX(5.64, 9.4, 1, 0.4, 'hub'),
+  circY(1.2, 12.04, 2.2, 0.45, 'lamp'), circY(4.4, 12.04, 2.2, 0.45, 'lamp'),
+].join('');
+// People are drawn flat in screen space, feet at the origin.
+const personBody = '<rect x="-2.3" y="-9" width="1.9" height="9" rx="0.8" class="legs"/><rect x="0.4" y="-9" width="1.9" height="9" rx="0.8" class="legs"/><rect x="-3.4" y="-17" width="6.8" height="9.5" rx="2.4" class="shirt"/><rect x="-4.6" y="-16.2" width="1.6" height="7.5" rx="0.8" class="shirt"/><rect x="3" y="-16.2" width="1.6" height="7.5" rx="0.8" class="shirt"/><circle cx="0" cy="-20.4" r="3" class="skin"/><path d="M-3 -20.8a3 3 0 0 1 6 0z" class="hair"/>';
+const person = `<g id="sf-person"><g class="sfu">${personBody}</g></g>`;
+const personTab = `<g id="sf-person-tab"><g class="sfu">${personBody}<rect x="-2.6" y="-15" width="6.4" height="4.4" rx="0.8" class="tab"/><rect x="-1.9" y="-14.3" width="5" height="3" rx="0.4" class="tab-scr"/></g></g>`;
+const coneC = P(1, 1, 0.3);
+const apex = P(1, 1, 3.4);
+const cone = `<g id="sf-cone"><g class="sfu">${flat(0, 0, 0.3, 2, 2, 'cone-base')}${pg([[coneC[0] - 3.4, coneC[1] + 0.6], apex, [coneC[0] + 3.4, coneC[1] + 0.6]], 'cone')}${pg([[coneC[0] - 2.2, coneC[1] - 4.6], [coneC[0] + 2.2, coneC[1] - 4.6], [coneC[0] + 1.6, coneC[1] - 7], [coneC[0] - 1.6, coneC[1] - 7]], 'cone-band')}</g></g>`;
+const treeTop = P(0.4, 0.4, 5.6);
+const tree = `<g id="sf-tree"><g class="sfu">${box(0, 0, 0, 0.8, 0.8, 3, 'trunk', false)}<circle cx="${n(treeTop[0])}" cy="${n(treeTop[1])}" r="11" class="leaf"/><circle cx="${n(treeTop[0] - 3.5)}" cy="${n(treeTop[1] - 3.5)}" r="5.5" class="leaf-hi"/></g></g>`;
+const ac = `<g id="sf-ac"><g class="sfu">${box(0, 0, 0, 3, 3, 1.4, 'wa')}${circTop(1.5, 1.5, 1.42, 1, 'fan')}${circTop(1.5, 1.5, 1.44, 0.35, 'hub')}</g></g>`;
+const winY = `<g id="sf-win-y"><g class="sfu">${qy(0, 0, 0, 2.2, 2.6, 'glass')}${qy(0, 0.01, 1.2, 2.2, 0.2, 'mullion')}</g></g>`;
+const winX = `<g id="sf-win-x"><g class="sfu">${qx(0, 0, 0, 2.2, 2.6, 'glass')}${qx(0.01, 0, 1.2, 2.2, 0.2, 'mullion')}</g></g>`;
+const pkt = '<g id="sf-pkt"><polygon points="0,-2.8 3.4,0 0,2.8 -3.4,0" class="sfu pkt"/></g>';
+const card = '<g id="sf-card"><g class="sfu"><rect x="-6" y="-4" width="12" height="8" rx="1.4" class="pay-card" transform="rotate(-18)"/><rect x="-6" y="-2.2" width="12" height="1.6" class="pay-stripe" transform="rotate(-18)"/></g></g>';
+const coin = '<g id="sf-coin"><g class="sfu"><circle r="8.5" class="coin"/><text y="4.6" text-anchor="middle" class="coin-t">$</text></g></g>';
+const check = '<g id="sf-check"><g class="sfu"><circle r="6.5" class="ok"/><path d="M-3 0.2l2.1 2.2 4-4.4" class="ok-t"/></g></g>';
+const svgDefs = [card, coin, check, `<g id="sf-car-x"><g class="sfu">${carX}</g></g>`, `<g id="sf-car-y"><g class="sfu">${carY}</g></g>`, person, personTab, cone, tree, ac, winY, winX, pkt].join('');
+
+// ── Upper slab: the operation ──────────────────────────────────────────────────────────────────────
+upperScale = true;
+const up: string[] = [];
+up.push(box(35, 35, UB, 60, 60, UZ - UB, 'pl'));
+up.push(flat(35, 74, UZ + 0.02, 60, 12, 'road'));
+[37, 44, 51, 71, 78, 86].forEach((x) => up.push(flat(x, 79.7, UZ + 0.04, 4, 0.6, 'dash')));
+[0, 1, 2, 3].forEach((i) => up.push(flat(56.2 + i * 1.5, 74.6, UZ + 0.04, 0.8, 10.8, 'dash')));
+[64, 72.2, 80.4].forEach((x) => up.push(flat(x, 38, UZ + 0.04, 0.5, 15, 'mark')));
+up.push(box(35, 73, UZ, 60, 1, 0.5, 'curb', false));
+// Office with window grid, door and rooftop units.
+up.push(box(38, 38, UZ, 20, 16, 12, 'wa'));
+[65, 69, 72.6].forEach((z, r) => [0, 1, 2, 3, 4, 5].forEach((i) => {
+  if (r === 0 && (i === 2 || i === 3)) return;
+  up.push(use('sf-win-y', P(39.4 + i * 3.1, 54.03, z)));
+}));
+[65, 69, 72.6].forEach((z) => [0, 1, 2, 3, 4].forEach((i) => up.push(use('sf-win-x', P(58.03, 39.2 + i * 3, z)))));
+up.push(qy(45.9, 54.04, UZ, 3.2, 3.6, 'door'));
+up.push(box(45.4, 54, UZ + 3.8, 4.2, 1.6, 0.4, 'bl'));
+up.push(box(38, 38, UZ + 12, 20, 16, 0.6, 'bl'));
+[[40, 40.5], [44.5, 40.5], [49, 40.5]].forEach(([x, y]) => up.push(use('sf-ac', P(x, y, UZ + 12.6))));
+up.push(box(53, 39.5, UZ + 12.6, 4, 1, 2.6, 'nv'));
+// Parking stalls with two parked cars and a driver.
+up.push(use('sf-car-y', P(65.6, 40, UZ), 'car-c'));
+up.push(use('sf-car-y', P(73.8, 40.5, UZ), 'car-b'));
+up.push(use('sf-person', P(70.6, 56, UZ), 'shirt-a', '', 1.25));
+// Cashier booth.
+up.push(box(84, 40, UZ, 9, 9, 8, 'wa'));
+up.push(qy(85.4, 49.03, UZ + 3.2, 6.2, 3.2, 'glass'));
+up.push(qx(93.03, 41.5, UZ + 3.2, 5, 3.2, 'glass'));
+up.push(box(82.8, 38.8, UZ + 8, 11.4, 11.4, 1.2, 'bl'));
+up.push(use('sf-person', P(89.5, 52.5, UZ), 'shirt-b', '', 1.25));
+// Lamp post, cones, plate reader (LPR) with its scan, totem and barrier housing.
+up.push(box(40, 70.6, UZ, 0.7, 0.7, 12, 'nv'));
+up.push(box(40.7, 70.7, UZ + 11.4, 3.6, 0.5, 0.5, 'nv'));
+up.push(box(43.6, 70.4, UZ + 10.6, 2, 1.1, 0.8, 'wa'));
+up.push(use('sf-cone', P(44.5, 71, UZ)));
+up.push(use('sf-cone', P(47.5, 71, UZ)));
+up.push(box(56, 69.6, UZ, 0.7, 0.7, 11, 'nv'));
+up.push(box(56.7, 69.7, UZ + 10.2, 2.6, 0.5, 0.5, 'nv'));
+up.push(box(59.2, 69.3, UZ + 9.2, 2.6, 1.4, 1.4, 'nv'));
+up.push(circX(61.82, 70, UZ + 9.9, 0.42, 'lamp'));
+const lens = P(61.8, 70, UZ + 9.9);
+up.push(pg([lens, P(64, 75, UZ + 0.1), P(64, 85.5, UZ + 0.1), P(57.5, 85.5, UZ + 0.1), P(57.5, 75, UZ + 0.1)], 'scan sf-anim sf-scan-cone'));
+const scanStep = vec(5.6, 0, 0);
+up.push(flat(57.6, 75, UZ + 0.08, 0.7, 10.5, 'scanline sf-anim sf-scan', ` style="--sx:${n(scanStep[0])}px;--sy:${n(scanStep[1])}px"`));
+up.push(box(60, 70.3, UZ, 2.6, 2, 9, 'bl'));
+up.push(qy(60.4, 72.32, UZ + 5.6, 1.8, 2.6, 'scr'));
+up.push(qy(60.7, 72.32, UZ + 3.6, 1.2, 0.4, 'slot'));
+up.push(box(64.5, 70, UZ, 2.6, 2.6, 5, 'wa'));
+up.push(qy(64.5, 72.62, UZ + 3, 2.6, 0.8, 'band'));
+up.push(circTop(65.8, 71.3, UZ + 5.02, 0.6, 'lamp'));
+// Canopy back poles, raised arm poses, the cars, lowered arm poses, canopy front poles and roof.
+// Painter's order: a raised arm stands at the far edge of the road (pivot y 72.6), so the crossing car
+// is nearer and paints over it; a lowered arm spans the road in front of the waiting car.
+[[76.6, 72.6], [89.2, 72.6]].forEach(([x, y]) => up.push(box(x, y, UZ, 0.8, 0.8, 11, 'nv')));
+const inMove = vec(44, 0, 0);
+const raisedSlot = up.length;
+up.push('');
+up.push(`<g class="sf-anim sf-drive-in" style="--dx:${n(inMove[0])}px;--dy:${n(inMove[1])}px">${use('sf-car-x', P(36, 80.4, UZ), 'car-a')}</g>`);
+up.push(box(35, 86, UZ, 60, 1, 0.5, 'curb', false));
+// Barrier arm: it lies along +y and rises by rotating about the x axis through its pivot, in its own
+// vertical plane. Each pose is real geometry (rotated corners, visible faces only); the poses play as
+// frames (opacity steps), so the arm goes up without any sideways swing.
+const ARM = { x: 65.3, y: 72.6, z: UZ + 4, w: 1, d: 13.4, h: 0.8 };
+const PY = ARM.y;
+const PZ0 = ARM.z + ARM.h / 2;
+const rotBox = (x: number, y: number, z: number, w: number, d: number, h: number, k: string, deg: number) => {
+  const t = (deg * Math.PI) / 180;
+  const rot = (yy: number, zz: number): [number, number] => [PY + (yy - PY) * Math.cos(t) - (zz - PZ0) * Math.sin(t), PZ0 + (yy - PY) * Math.sin(t) + (zz - PZ0) * Math.cos(t)];
+  const c = (i: number): V => {
+    const cx = i & 1 ? x + w : x;
+    const cy = i & 2 ? y + d : y;
+    const cz = i & 4 ? z + h : z;
+    const [ry, rz] = rot(cy, cz);
+    return P(cx, ry, rz);
+  };
+  // [corner indices, original normal (x, y, z), tone]
+  const faces: [number[], [number, number, number], string][] = [
+    [[4, 5, 7, 6], [0, 0, 1], 't'], [[0, 1, 3, 2], [0, 0, -1], 'l'],
+    [[1, 3, 7, 5], [1, 0, 0], 'r'], [[0, 2, 6, 4], [-1, 0, 0], 'r'],
+    [[2, 3, 7, 6], [0, 1, 0], 'l'], [[0, 1, 5, 4], [0, -1, 0], 'l'],
+  ];
+  const vis = faces.filter(([, [nx, ny, nz]]) => nx + (ny * Math.cos(t) - nz * Math.sin(t)) + (ny * Math.sin(t) + nz * Math.cos(t)) > 0.001);
+  return `<g class="k-${k}">${vis.map(([q, , tone]) => pg(q.map(c), tone)).join('')}</g>`;
+};
+const POSES = [0, 10, 20, 30, 40, 50, 60, 70, 80, 88];
+const poseKeys: string[] = [];
+POSES.forEach((deg, i) => {
+  const parts = [rotBox(ARM.x, ARM.y, ARM.z, ARM.w, ARM.d, ARM.h, 'wa', deg)];
+  [0, 1, 2].forEach((j) => parts.push(rotBox(ARM.x - 0.02, ARM.y + 2.4 + j * 3.8, ARM.z - 0.02, ARM.w + 0.04, 1.6, ARM.h + 0.04, 'bl', deg)));
+  const pose = `<g class="sf-anim sf-pose${i ? ' pose-off' : ''}" style="animation-name:sf-pose-${i}">${parts.join('')}</g>`;
+  // Poses from 50° up are only visible while the cars cross: draw them behind the cars.
+  if (deg >= 50) up[raisedSlot] += pose;
+  else up.push(pose);
+  // Up from 34% to 46% of the loop, held, down from 70% to 82%.
+  const last = POSES.length - 1;
+  const step = 12 / last;
+  const pct = (v: number) => `${Math.round(v * 100) / 100}%`;
+  if (i === 0) poseKeys.push(`@keyframes sf-pose-0{0%,${pct(34 + step)}{opacity:1}${pct(34 + step + 0.01)},${pct(82 - step - 0.01)}{opacity:0}${pct(82 - step)},100%{opacity:1}}`);
+  else if (i === last) poseKeys.push(`@keyframes sf-pose-${i}{0%,${pct(46 - 0.01)}{opacity:0}46%,70%{opacity:1}${pct(70.01)},100%{opacity:0}}`);
+  else {
+    const u = 34 + i * step;
+    const dn = 82 - i * step;
+    poseKeys.push(`@keyframes sf-pose-${i}{0%,${pct(u - 0.01)}{opacity:0}${pct(u)},${pct(u + step - 0.01)}{opacity:1}${pct(u + step)},${pct(dn - step - 0.01)}{opacity:0}${pct(dn - step)},${pct(dn - 0.01)}{opacity:1}${pct(dn)},100%{opacity:0}}`);
+  }
+});
+const poseCss = poseKeys.join('');
+[[76.6, 88.6], [89.2, 88.6]].forEach(([x, y]) => up.push(box(x, y, UZ, 0.8, 0.8, 11, 'nv')));
+up.push(box(75.6, 71.6, UZ + 11, 15, 18, 1.6, 'wa'));
+up.push(qy(75.6, 89.62, UZ + 11, 15, 1.6, 'band'));
+up.push(qx(90.62, 71.6, UZ + 11, 18, 1.6, 'band'));
+// Front sidewalk: payment kiosk with attendant, trees, pedestrian.
+up.push(use('sf-tree', P(38.4, 90, UZ)));
+up.push(box(49, 89.6, UZ, 2.6, 2, 6.6, 'nv'));
+up.push(qy(49.35, 91.62, UZ + 3.8, 1.9, 2.2, 'scr'));
+up.push(qy(49.7, 91.62, UZ + 2.4, 1.2, 0.4, 'slot'));
+const tapAt = P(52.4, 92.4, UZ + 6.2);
+up.push(`<g class="sf-anim sf-tap">${use('sf-card', tapAt, '', '', 1.5)}</g>`);
+[5, 9, 13].forEach((r, i) => up.push(`<path d="M${n(tapAt[0] - 13)} ${n(tapAt[1] - r)}a${r} ${r} 0 0 0 0 ${2 * r}" class="nfc sf-anim sf-nfc" style="animation-delay:${n(i * 0.15)}s"/>`));
+up.push(`<g class="sf-anim sf-paid">${use('sf-check', P(50.3, 90.6, UZ + 13), '', '', 1.6)}</g>`);
+up.push(use('sf-person', P(54.2, 92.4, UZ), 'shirt-b', '', 1.25));
+up.push(`<g class="sf-anim sf-bob">${use('sf-person', P(64, 92.6, UZ), 'shirt-a', '', 1.25)}</g>`);
+up.push(use('sf-tree', P(71, 91, UZ)));
+up.push(use('sf-tree', P(91.6, 91.8, UZ)));
+
+upperScale = false;
+
+// ── Lower diamond: the software layer ──────────────────────────────────────────────────────────────
+const LZ = 0.6;
+const lo: string[] = [];
+// Each device sits in the screen column of the slab object its beam drops from; the slab is drawn
+// K times larger, so a device laid out for column a moves sideways by (K - 1) * a.
+const shift = (a: number) => n((K - 1) * a * C * S);
+const open = (a: number) => `<g transform="translate(${shift(a)} 0)">`;
+lo.push(box(0, 0, -0.8, 130, 130, 0.8 + LZ, 'gp', false));
+[13, 26, 39, 52, 65, 78, 91, 104, 117].forEach((v) => {
+  lo.push(pl([P(v, 0, LZ + 0.02), P(v, 130, LZ + 0.02)], 'grid'));
+  lo.push(pl([P(0, v, LZ + 0.02), P(130, v, LZ + 0.02)], 'grid'));
+});
+// Router with antennas and Wi-Fi waves.
+lo.push(box(31.6, 100.2, LZ + 2, 0.5, 0.5, 4.4, 'nv'));
+lo.push(box(38.4, 100.2, LZ + 2, 0.5, 0.5, 4.4, 'nv'));
+lo.push(box(31, 100, LZ, 8.6, 5, 2, 'wa'));
+[0, 1, 2].forEach((i) => lo.push(qy(33 + i * 1.6, 105.02, LZ + 0.8, 0.8, 0.4, 'led sf-anim sf-blink', ` style="animation-delay:${i * 0.4}s"`)));
+const wifi = P(35.3, 102.5, LZ + 7.2);
+[5, 9, 13].forEach((r, i) => lo.push(`<path d="M${n(wifi[0] - r)} ${n(wifi[1])}a${r} ${r} 0 0 1 ${2 * r} 0" class="wifi sf-anim sf-wave" style="animation-delay:${i * 0.35}s"/>`));
+// Phone lying flat with an app: status bar, header card, QR card, list rows.
+lo.push(open(-40));
+const PZ = LZ + 1.2;
+lo.push(box(48, 84, LZ, 14, 22, 1.2, 'nv'));
+lo.push(flat(48.7, 84.8, PZ + 0.02, 12.6, 20.4, 'app'));
+lo.push(flat(49.4, 85.4, PZ + 0.04, 11.2, 0.9, 'app-bar'));
+lo.push(flat(49.4, 87, PZ + 0.04, 11.2, 4.2, 'app-head'));
+lo.push(flat(50.2, 87.8, PZ + 0.06, 5, 0.8, 'app-line'));
+lo.push(flat(50.2, 89.4, PZ + 0.06, 3, 0.8, 'app-line'));
+lo.push(flat(49.4, 92, PZ + 0.04, 11.2, 7.4, 'app-card'));
+const qr = ['1110111', '1010101', '1110111', '0001000', '1101011', '0110110', '1011101'];
+qr.forEach((row, r) => [...row].forEach((b, c) => { if (b === '1') lo.push(flat(50.2 + c * 0.82, 92.7 + r * 0.82, PZ + 0.06, 0.82, 0.82, 'qr')); }));
+lo.push(flat(56.6, 93.4, PZ + 0.06, 3, 0.7, 'app-line-dk'));
+lo.push(flat(56.6, 95, PZ + 0.06, 2.2, 0.7, 'app-line-dk'));
+[100.2, 102.8].forEach((y, i) => {
+  lo.push(flat(49.4, y, PZ + 0.04, 11.2, 2.2, 'app-card sf-anim sf-refresh', ` style="animation-delay:${i * 0.6}s"`));
+  lo.push(circTop(50.6, y + 1.1, PZ + 0.06, 0.7, i === 1 ? 'app-ok' : 'app-dot'));
+  lo.push(flat(52, y + 0.7, PZ + 0.06, 4.2, 0.7, 'app-line-dk'));
+});
+// Paid receipt badge floating over the phone, in step with the coins arriving.
+lo.push(`<g class="sf-anim sf-receipt">${use('sf-check', P(63, 90, PZ + 9), '', '', 1.7)}</g>`);
+lo.push(use('sf-person', P(69.5, 105.5, LZ), 'shirt-a', '', 1.7));
+lo.push('</g>');
+// Server rack with drive bays and blinking LEDs.
+lo.push(open(-10));
+lo.push(box(74, 84, LZ, 10, 10, 18, 'sv'));
+[0, 1, 2, 3, 4, 5, 6].forEach((i) => {
+  const z = LZ + 1.6 + i * 2.3;
+  lo.push(qx(84.03, 85, z, 8, 1.6, 'bay'));
+  lo.push(circX(84.06, 86, z + 0.8, 0.32, 'led sf-anim sf-blink', ` style="animation-delay:${n((i * 0.37) % 1.6)}s"`));
+  lo.push(circX(84.06, 87.2, z + 0.8, 0.32, 'led-dim'));
+});
+[0, 1, 2, 3, 4, 5, 6, 7].forEach((i) => lo.push(qy(75.2, 94.03, LZ + 2 + i * 2, 7.6, 0.25, 'vent')));
+lo.push(`<g class="sf-anim sf-bob" style="animation-delay:1.1s">${use('sf-person-tab', P(89.5, 99, LZ), 'shirt-b', '', 1.7)}</g>`);
+lo.push('</g>');
+// Monitor on a stand with a dashboard: KPI strip, line chart and growing bars.
+lo.push(open(44));
+lo.push(box(102, 60, LZ, 8, 6, 0.6, 'nv'));
+lo.push(box(105, 62, LZ, 2, 2, 8.6, 'nv'));
+lo.push(box(107, 51, LZ + 8, 1.2, 24, 15, 'nv'));
+const MX = 108.22;
+lo.push(qx(MX, 52, LZ + 9, 22, 13, 'scr'));
+[0, 1, 2].forEach((i) => lo.push(qx(MX + 0.02, 53 + i * 6.8, LZ + 19.6, 5.6, 1.6, 'kpi')));
+// Revenue tile: a «$» written on the screen plane (reading direction goes toward -y on this face).
+const rev = P(MX + 0.04, 57.6, LZ + 19.75);
+lo.push(`<text class="kpi-t" text-anchor="middle" transform="matrix(${n(C * 0.42)} ${n(-0.5 * 0.42)} 0 0.42 ${n(rev[0])} ${n(rev[1])})">$</text>`);
+const chart = [0, 1, 2, 3, 4, 5, 6].map((i): V => P(MX + 0.03, 53.5 + i * 3.2, LZ + 15.4 + [0.4, 1.6, 1, 2.4, 1.8, 3, 3.4][i]));
+lo.push(pl(chart, 'chart'));
+[2, 5, 3.4, 6.4, 4.6, 7.2].forEach((h, i) => {
+  const y = 53.6 + i * 3.4;
+  const base = P(MX + 0.03, y + 1.1, LZ + 10);
+  lo.push(qx(MX + 0.03, y, LZ + 10, 2.2, h, 'bar sf-anim sf-grow', ` style="transform-origin:${n(base[0])}px ${n(base[1])}px;animation-delay:${n(i * 0.3)}s"`));
+});
+lo.push(use('sf-person-tab', P(120, 71.5, LZ), 'shirt-a', '', 1.7));
+lo.push('</g>');
+// Laptop: keyboard, touchpad, screen with code and a typing line.
+lo.push(open(16));
+lo.push(box(98, 85, LZ, 16, 10, 1, 'wa'));
+[87, 88.4, 89.8, 91.2].forEach((y) => lo.push(pl([P(99.6, y, LZ + 1.02), P(112.4, y, LZ + 1.02)], 'keys')));
+lo.push(flat(103.6, 92.6, LZ + 1.02, 5, 1.8, 'pad'));
+const sy = (z: number) => 85 - ((z - (LZ + 1)) / 11) * 2;
+const z0 = LZ + 1;
+const z1 = LZ + 12;
+lo.push(pg([P(98, sy(z0), z0), P(114, sy(z0), z0), P(114, sy(z1), z1), P(98, sy(z1), z1)], 'laptop'));
+const code = [
+  [z1 - 2, 100, 6],
+  [z1 - 3.6, 102, 8],
+  [z1 - 5.2, 102, 5],
+  [z1 - 6.8, 100, 9],
+  [z1 - 8.4, 102, 4],
+];
+code.slice(0, 4).forEach(([z, x0, w]) => lo.push(pl([P(x0, sy(z) + 0.05, z), P(x0 + w, sy(z) + 0.05, z)], 'code')));
+const [tz, tx, tw] = code[4];
+const ta = P(tx, sy(tz) + 0.05, tz);
+lo.push(pl([ta, P(tx + tw, sy(tz) + 0.05, tz)], 'code sf-anim sf-type', ` style="transform-origin:${n(ta[0])}px ${n(ta[1])}px"`));
+const cur = P(tx + tw + 0.8, sy(tz) + 0.05, tz);
+lo.push(`<line x1="${n(cur[0])}" y1="${n(cur[1] - 1.8)}" x2="${n(cur[0])}" y2="${n(cur[1] + 1.8)}" class="caret sf-anim sf-blink"/>`);
+lo.push(use('sf-person', P(99, 101.5, LZ), 'shirt-b', '', 1.7));
+lo.push('</g>');
+
+// ── Beams: straight light from an object on the slab down to a device ───────────────────────────────
+// Screen-vertical lines: the device and the slab anchor share x - y (the same isometric screen column).
+const beamTo = (device: V, a: number, pulses: { d: number; down?: boolean; coin?: boolean }[]) => {
+  upperScale = true;
+  const anchor = a <= 0 ? P(95 + a, 95, UB) : P(95, 95 - a, UB);
+  upperScale = false;
+  const x = n(device[0] + shift(a));
+  const ya = n(anchor[1]);
+  const yd = n(device[1]);
+  const len = n(yd - ya);
+  const land = `<ellipse cx="${x}" cy="${yd}" rx="7" ry="3.5" class="land"/>`;
+  const lines = `<line x1="${x}" y1="${ya}" x2="${x}" y2="${yd}" class="beam-wide"/><line x1="${x}" y1="${ya}" x2="${x}" y2="${yd}" class="beam"/>`;
+  const dots = pulses.map((p, i) => use(p.coin ? 'sf-coin' : 'sf-pkt', [x, p.down ? ya : yd], `sf-anim sf-travel${p.down ? ' down' : ''}`, ` style="--l:${p.down ? len : -len}px;--f:${n(0.3 + i * 0.35)};animation-delay:${p.d}s"`));
+  return land + lines + dots.join('');
+};
+const beams = [
+  beamTo(P(55, 95, PZ), -40, [{ d: 1.2, down: true, coin: true }, { d: 2.7, down: true, coin: true }]),
+  beamTo(P(79, 89, LZ + 18), -10, [{ d: 0.5 }, { d: 2 }]),
+  beamTo(P(106, sy(z1), z1), 16, [{ d: 0.9 }, { d: 2.3, down: true }]),
+  beamTo(P(107.6, 63.6, LZ + 23), 44, [{ d: 0.2 }, { d: 1.7 }]),
+].join('');
+
+// ── View box and floating rings ────────────────────────────────────────────────────────────────────
+const ext = [P(0, 0, 0), P(130, 0, 0), P(0, 130, 0), P(130, 130, 0)];
+upperScale = true;
+ext.push(P(35, 35, UZ + 15), P(95, 35, UZ), P(35, 95, UZ));
+upperScale = false;
+const x0 = Math.min(...ext.map((p) => p[0])) - 10;
+const x1 = Math.max(...ext.map((p) => p[0])) + 10;
+const y0 = Math.min(...ext.map((p) => p[1])) - 40;
+const y1 = Math.max(...ext.map((p) => p[1])) + 14;
+const W = x1 - x0;
+const H = y1 - y0;
+const viewBox = `${n(x0)} ${n(y0)} ${n(W)} ${n(H)}`;
+const rings = [
+  [0.3, 0.06, 7], [0.86, 0.16, 6], [0.13, 0.46, 9], [0.79, 0.5, 13], [0.06, 0.66, 5], [0.95, 0.72, 7], [0.62, 0.02, 4], [0.22, 0.86, 4],
+]
+  .map(([fx, fy, r], i) => `<circle cx="${n(x0 + fx * W)}" cy="${n(y0 + fy * H)}" r="${r}" class="ring${i % 3 === 0 ? ' sf-anim sf-drift' : ''}" style="animation-delay:${n(i * 0.7)}s"/>`)
+  .join('');
+
+const svgBody = rings + lo.join('') + beams + up.join('');
+---
+
+<svg data-software-factory class="sf block h-auto w-full" viewBox={viewBox} role="img" aria-labelledby="sf-title sf-desc">
+  <title id="sf-title">Fábrica de software de Pyramidev</title>
+  <desc id="sf-desc">Ilustración isométrica en dos niveles. Arriba, en una plataforma clara, una operación de estacionamiento: una oficina con ventanas y equipos de aire en el techo, una caseta de cobro, autos estacionados, un carril con cámara lectora de placas, tótem de boletos y una pluma que se levanta para dejar pasar un auto bajo una marquesina, un quiosco de pago donde se acerca una tarjeta y aparece una palomita de pago aprobado, y personas atendiendo. Abajo, en una plataforma translúcida más grande, la capa de software que la hace funcionar: un teléfono con una app que confirma el pago, un servidor con luces, una laptop en la que se escribe código, un monitor con un tablero de indicadores, un enrutador inalámbrico y personas trabajando. Haces de luz bajan de la operación a cada dispositivo y llevan datos en ambos sentidos; monedas con el signo de pesos bajan del quiosco de pago al teléfono.</desc>
+  <style is:inline set:html={poseCss} />
+  <defs set:html={svgDefs} />
+  <g set:html={svgBody} />
+</svg>
+
+<script>
+  // Pause the loops while the hero is off screen (one observer, one class).
+  const svg = document.querySelector<SVGElement>('[data-software-factory]');
+  if (svg && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => svg.classList.toggle('is-paused', !e.isIntersecting)).observe(svg);
+  }
+</script>
+
+<style is:global>
+  /* Three tones per material, light from the upper left: top lightest, left mid, right darkest. */
+  :is(.sf, .sfu) .e { fill: none; stroke: color-mix(in srgb, var(--pv-white) 45%, transparent); stroke-width: 0.5; }
+  :is(.sf, .sfu) .k-pl .t { fill: var(--pv-mist); }
+  :is(.sf, .sfu) .k-pl .l { fill: var(--pv-line); }
+  :is(.sf, .sfu) .k-pl .r { fill: color-mix(in srgb, var(--pv-sky) 80%, var(--pv-blue-tint)); }
+  :is(.sf, .sfu) .k-gp .t { fill: color-mix(in srgb, var(--pv-blue) 16%, transparent); stroke: color-mix(in srgb, var(--pv-sky) 70%, transparent); stroke-width: 1.2; }
+  :is(.sf, .sfu) .k-gp .l { fill: color-mix(in srgb, var(--pv-blue-tint) 30%, transparent); }
+  :is(.sf, .sfu) .k-gp .r { fill: color-mix(in srgb, var(--pv-blue-tint) 18%, transparent); }
+  :is(.sf, .sfu) .k-wa .t { fill: var(--pv-white); }
+  :is(.sf, .sfu) .k-wa .l { fill: var(--pv-mist); }
+  :is(.sf, .sfu) .k-wa .r { fill: var(--pv-line); }
+  :is(.sf, .sfu) .k-bl .t { fill: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .k-bl .l { fill: var(--pv-blue); }
+  :is(.sf, .sfu) .k-bl .r { fill: var(--pv-blue-strong); }
+  :is(.sf, .sfu) .k-nv .t { fill: color-mix(in srgb, var(--pv-blue-strong) 70%, var(--pv-navy)); }
+  :is(.sf, .sfu) .k-nv .l { fill: var(--pv-navy); }
+  :is(.sf, .sfu) .k-nv .r { fill: var(--pv-ink-raised); }
+  :is(.sf, .sfu) .k-sv .t { fill: var(--pv-blue-strong); }
+  :is(.sf, .sfu) .k-sv .l { fill: var(--pv-navy); }
+  :is(.sf, .sfu) .k-sv .r { fill: color-mix(in srgb, var(--pv-navy) 70%, var(--pv-ink)); }
+  :is(.sf, .sfu) .k-trunk .t, :is(.sf, .sfu) .k-trunk .l, :is(.sf, .sfu) .k-trunk .r { fill: var(--pv-navy); }
+  :is(.sf, .sfu) .k-curb .t { fill: var(--pv-white); }
+  :is(.sf, .sfu) .k-curb .l { fill: var(--pv-line); }
+  :is(.sf, .sfu) .k-curb .r { fill: var(--pv-sky); }
+  :is(.sf, .sfu) .k-car .t { fill: var(--ct); }
+  :is(.sf, .sfu) .k-car .l { fill: var(--cl); }
+  :is(.sf, .sfu) .k-car .r { fill: var(--cr); }
+  :is(.sf, .sfu) .car-a { --ct: var(--pv-blue-tint); --cl: var(--pv-blue); --cr: var(--pv-blue-strong); }
+  :is(.sf, .sfu) .car-b { --ct: color-mix(in srgb, var(--pv-blue-strong) 70%, var(--pv-navy)); --cl: var(--pv-navy); --cr: var(--pv-ink-raised); }
+  :is(.sf, .sfu) .car-c { --ct: var(--pv-white); --cl: var(--pv-mist); --cr: var(--pv-line); }
+  :is(.sf, .sfu) .win { fill: var(--pv-ink-raised); }
+  :is(.sf, .sfu) .grille { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .tire { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .hub { fill: var(--pv-lilac); }
+  :is(.sf, .sfu) .lamp { fill: var(--pv-sky); }
+  :is(.sf, .sfu) .road { fill: color-mix(in srgb, var(--pv-line) 70%, var(--pv-lilac)); }
+  :is(.sf, .sfu) .dash { fill: var(--pv-white); }
+  :is(.sf, .sfu) .mark { fill: var(--pv-lilac); }
+  :is(.sf, .sfu) .glass { fill: color-mix(in srgb, var(--pv-sky) 55%, var(--pv-blue-tint)); }
+  :is(.sf, .sfu) .mullion { fill: var(--pv-white); }
+  :is(.sf, .sfu) .door { fill: var(--pv-blue-strong); }
+  :is(.sf, .sfu) .fan { fill: var(--pv-line); stroke: var(--pv-lilac); stroke-width: 0.4; }
+  :is(.sf, .sfu) .scr { fill: var(--pv-blue); }
+  :is(.sf, .sfu) .slot { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .band { fill: var(--pv-blue); }
+  :is(.sf, .sfu) .scan { fill: color-mix(in srgb, var(--pv-sky) 30%, transparent); }
+  :is(.sf, .sfu) .scanline { fill: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .cone-base { fill: var(--pv-white); }
+  :is(.sf, .sfu) .cone { fill: var(--pv-white); }
+  :is(.sf, .sfu) .cone-band { fill: var(--pv-blue); }
+  :is(.sf, .sfu) .leaf { fill: var(--pv-blue); }
+  :is(.sf, .sfu) .leaf-hi { fill: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .legs { fill: var(--pv-navy); }
+  :is(.sf, .sfu) .skin { fill: var(--pv-sky); }
+  :is(.sf, .sfu) .hair { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .shirt { fill: var(--shirt, var(--pv-blue-tint)); }
+  :is(.sf, .sfu) .shirt-a { --shirt: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .shirt-b { --shirt: var(--pv-white); }
+  :is(.sf, .sfu) .tab { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .tab-scr { fill: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .grid { fill: none; stroke: color-mix(in srgb, var(--pv-sky) 18%, transparent); stroke-width: 0.6; }
+  :is(.sf, .sfu) .led { fill: var(--pv-sky); }
+  :is(.sf, .sfu) .led-dim { fill: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .wifi { fill: none; stroke: var(--pv-sky); stroke-width: 1.4; stroke-linecap: round; }
+  :is(.sf, .sfu) .app { fill: var(--pv-mist); }
+  :is(.sf, .sfu) .app-bar { fill: var(--pv-line); }
+  :is(.sf, .sfu) .app-head { fill: var(--pv-blue); }
+  :is(.sf, .sfu) .app-line { fill: var(--pv-sky); }
+  :is(.sf, .sfu) .app-line-dk { fill: var(--pv-lilac); }
+  :is(.sf, .sfu) .app-card { fill: var(--pv-white); }
+  :is(.sf, .sfu) .app-dot { fill: var(--pv-blue-tint); }
+  :is(.sf, .sfu) .qr { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .bay { fill: var(--pv-ink); }
+  :is(.sf, .sfu) .vent { fill: var(--pv-ink-line); }
+  :is(.sf, .sfu) .kpi { fill: var(--pv-blue-strong); }
+  :is(.sf, .sfu) .kpi-t { fill: var(--pv-white); font-size: 16px; font-weight: 500; }
+  :is(.sf, .sfu) .pay-card { fill: var(--pv-blue); stroke: var(--pv-white); stroke-width: 0.8; }
+  :is(.sf, .sfu) .pay-stripe { fill: var(--pv-white); }
+  :is(.sf, .sfu) .coin { fill: var(--pv-white); stroke: var(--pv-blue-tint); stroke-width: 1.2; }
+  :is(.sf, .sfu) .coin-t { fill: var(--pv-blue); font-size: 13px; font-weight: 500; }
+  :is(.sf, .sfu) .ok { fill: var(--color-success); stroke: var(--pv-white); stroke-width: 1; }
+  :is(.sf, .sfu) .ok-t { fill: none; stroke: var(--pv-white); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  :is(.sf, .sfu) .app-ok { fill: var(--color-success); }
+  :is(.sf, .sfu) .nfc { fill: none; stroke: var(--pv-sky); stroke-width: 1.2; stroke-linecap: round; }
+  :is(.sf, .sfu) .chart { fill: none; stroke: var(--pv-white); stroke-width: 1; stroke-linejoin: round; }
+  :is(.sf, .sfu) .bar { fill: var(--pv-sky); }
+  :is(.sf, .sfu) .keys { fill: none; stroke: var(--pv-lilac); stroke-width: 2.2; stroke-dasharray: 2 1; }
+  :is(.sf, .sfu) .pad { fill: var(--pv-line); }
+  :is(.sf, .sfu) .laptop { fill: var(--pv-ink-raised); stroke: var(--pv-blue-tint); stroke-width: 0.8; }
+  :is(.sf, .sfu) .code { fill: none; stroke: var(--pv-sky); stroke-width: 1.4; stroke-linecap: round; }
+  :is(.sf, .sfu) .caret { stroke: var(--pv-white); stroke-width: 1; }
+  :is(.sf, .sfu) .beam { stroke: color-mix(in srgb, var(--pv-sky) 80%, transparent); stroke-width: 1.2; }
+  :is(.sf, .sfu) .beam-wide { stroke: color-mix(in srgb, var(--pv-blue-tint) 24%, transparent); stroke-width: 8; }
+  :is(.sf, .sfu) .land { fill: color-mix(in srgb, var(--pv-sky) 25%, transparent); }
+  .sfu.pkt { fill: var(--pv-white); }
+  .sf use.sf-travel { opacity: 0; }
+  :is(.sf, .sfu) .ring { fill: none; stroke: var(--pv-white); stroke-width: 1.6; opacity: 0.85; }
+
+  /* Motion: transform and opacity only, slow and staggered loops. */
+  :is(.sf, .sfu) .sf-travel { animation: sf-travel 3s linear infinite; }
+  :is(.sf, .sfu) .sf-blink { animation: sf-blink 1.6s steps(1, end) infinite; }
+  :is(.sf, .sfu) .sf-wave { animation: sf-wave 2.1s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-refresh { animation: sf-refresh 3.4s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-grow { animation: sf-grow 3.6s ease-in-out infinite alternate; }
+  :is(.sf, .sfu) .sf-type { animation: sf-type 3.2s steps(8, end) infinite; }
+  :is(.sf, .sfu) .sf-scan { animation: sf-scan 1.8s ease-in-out infinite alternate; }
+  :is(.sf, .sfu) .sf-scan-cone { animation: sf-wave 1.8s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-drive-in { animation: sf-drive-in 8s cubic-bezier(0.2, 0, 0, 1) infinite; }
+  :is(.sf, .sfu) .sf-pose { animation-duration: 8s; animation-timing-function: linear; animation-iteration-count: infinite; }
+  :is(.sf, .sfu) .pose-off { opacity: 0; }
+  :is(.sf, .sfu) .sf-tap { animation: sf-tap 4s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-nfc { animation: sf-nfc 4s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-paid { animation: sf-paid 4s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-receipt { animation: sf-receipt 4s ease-in-out infinite; }
+  :is(.sf, .sfu) .sf-bob { animation: sf-bob 2.8s ease-in-out infinite alternate; }
+  :is(.sf, .sfu) .sf-drift { animation: sf-drift 6s ease-in-out infinite alternate; }
+  .sf.is-paused .sf-anim { animation-play-state: paused; }
+
+  @keyframes sf-travel {
+    0% { transform: translateY(0); opacity: 0; }
+    12%, 88% { opacity: 1; }
+    100% { transform: translateY(var(--l)); opacity: 0; }
+  }
+  @keyframes sf-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @keyframes sf-wave { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  @keyframes sf-refresh { 0%, 70%, 100% { opacity: 1; } 80% { opacity: 0.35; } }
+  @keyframes sf-grow { from { transform: scale(1, 0.55); } to { transform: scale(1, 1); } }
+  @keyframes sf-type { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes sf-scan { from { transform: translate(0, 0); } to { transform: translate(var(--sx), var(--sy)); } }
+  /* Car 1 rolls up to the barrier, waits while it lifts, drives under the canopy and is replaced. */
+  @keyframes sf-drive-in {
+    0% { transform: translate(0, 0); opacity: 0; }
+    6% { opacity: 1; }
+    30%, 44% { transform: translate(calc(var(--dx) * 0.318), calc(var(--dy) * 0.318)); }
+    80% { transform: translate(var(--dx), var(--dy)); opacity: 1; }
+    90%, 100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+  }
+  /* Payment at the kiosk: the card taps, the waves pulse, the check appears; the receipt reaches the phone. */
+  @keyframes sf-tap { 0%, 18%, 100% { transform: translate(6px, 2px); opacity: 0; } 24%, 30% { transform: translate(0, 0); opacity: 1; } 40% { transform: translate(6px, 2px); opacity: 0; } }
+  @keyframes sf-nfc { 0%, 22%, 36%, 100% { opacity: 0; } 28% { opacity: 1; } }
+  @keyframes sf-paid { 0%, 30%, 70%, 100% { opacity: 0; transform: translateY(2px); } 36%, 62% { opacity: 1; transform: translateY(0); } }
+  @keyframes sf-receipt { 0%, 52%, 96%, 100% { opacity: 0; transform: translateY(2px); } 60%, 88% { opacity: 1; transform: translateY(0); } }
+  @keyframes sf-bob { from { transform: translateY(0); } to { transform: translateY(-1.2px); } }
+  @keyframes sf-drift { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+
+  /* Reduced motion: nothing moves; the static scene is complete (packets parked along the beams). */
+  @media (prefers-reduced-motion: reduce) {
+    .sf .sf-anim { animation: none !important; }
+    .sf use.sf-travel { opacity: 1; transform: translateY(calc(var(--l) * var(--f))); }
+  }
+</style>

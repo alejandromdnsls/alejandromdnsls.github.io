@@ -1,0 +1,32 @@
+---
+import Section from './Section.astro';
+import SectionHeader from './SectionHeader.astro';
+import { RISK_ITEMS } from '../data/faq';
+
+// Every item comes from RISK_ITEMS, checked against templates/data/terms.json by faq.test.mjs.
+---
+
+<Section id="garantias" tone="surface">
+  <div class="grid gap-12 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <SectionHeader
+        eyebrow="Sin letras chiquitas"
+        title="Lo que queda por escrito antes de empezar"
+        lead="Son las mismas condiciones de la cotización y el contrato de cada desarrollo a la medida."
+      />
+    </div>
+    <ul class="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:col-span-8">
+      {RISK_ITEMS.map((item) => (
+        <li data-risk-item class="flex gap-4 bg-canvas p-6 lg:p-7">
+          <svg class="mt-1 size-5 shrink-0 text-link-base" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 10.5 3.5 3.5 7.5-8" />
+          </svg>
+          <div>
+            <h3 data-risk-title class="text-lg leading-snug">{item.title}</h3>
+            <p data-risk-text class="mt-2 text-fg-muted">{item.text}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Section>

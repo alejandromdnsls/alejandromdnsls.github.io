@@ -13,9 +13,9 @@ interface Props {
 const { eyebrow, title, lead, back, compact = false } = Astro.props;
 ---
 
-<header class="bg-brand-dark relative overflow-hidden text-white">
+<header data-nav-dark class="bg-brand-dark relative overflow-hidden text-white">
   <Watermark on="dark" class="-bottom-24 -right-28 w-[26rem] opacity-[0.14] lg:-bottom-40 lg:-right-32 lg:w-[38rem]" />
-  <div class:list={['relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8', compact ? 'py-16 lg:py-24' : 'py-20 lg:py-28']}>
+  <div class:list={['relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8', compact ? 'pb-14 pt-32 lg:pb-20 lg:pt-40' : 'pb-16 pt-36 lg:pb-24 lg:pt-44']}>
     {back && (
       <p class="mb-8 text-sm">
         <a href={back.href} class="text-[var(--pv-sky)] underline underline-offset-4 hover:text-white">{back.label}</a>

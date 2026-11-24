@@ -16,18 +16,23 @@ const serviceNames = services.map((s) => SERVICES.find((x) => x.slug === s)?.tit
 
 <article class="relative flex flex-col overflow-hidden rounded-lg border border-line bg-canvas transition-colors duration-200 hover:border-brand">
   {cover && (
-    <Picture
-      src={cover.src}
-      alt=""
-      widths={[320, 480, 640]}
-      sizes="(min-width: 1024px) 352px, (min-width: 768px) 50vw, 100vw"
-      formats={['avif', 'webp']}
-      class="aspect-[16/9] w-full border-b border-line object-cover object-top"
-      loading="lazy"
-    />
+    <div class="border-b border-line bg-panel px-5 pt-5" aria-hidden="true">
+      <div class="frame-browser aspect-[16/10] rounded-b-none border-b-0 shadow-none">
+        <div class="frame-browser-bar py-1.5"><span class="frame-dots"><span></span><span></span><span></span></span></div>
+        <Picture
+          src={cover.src}
+          alt=""
+          widths={[320, 480, 640]}
+          sizes="(min-width: 1024px) 312px, (min-width: 768px) 45vw, 90vw"
+          formats={['avif', 'webp']}
+          class="block h-full w-full object-cover object-top"
+          loading="lazy"
+        />
+      </div>
+    </div>
   )}
   {!cover && (
-    <div class="bg-brand-dark relative aspect-[16/9] w-full overflow-hidden border-b border-line" aria-hidden="true">
+    <div class="bg-brand-dark relative aspect-[5/3] w-full overflow-hidden border-b border-line" aria-hidden="true">
       <Watermark on="dark" class="-bottom-16 -right-10 w-[20rem] opacity-[0.22]" />
     </div>
   )}

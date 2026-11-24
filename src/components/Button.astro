@@ -3,7 +3,7 @@ interface Props {
   href?: string;
   target?: string;
   rel?: string;
-  variant?: 'primary' | 'secondary' | 'secondary-dark' | 'inverse';
+  variant?: 'primary' | 'secondary' | 'secondary-dark' | 'inverse' | 'outline-white';
   type?: 'button' | 'submit';
   class?: string;
 }
@@ -18,6 +18,8 @@ const variants = {
     'border border-[var(--pv-lilac-strong)] bg-transparent text-white hover:border-white focus-visible:outline-[var(--pv-sky)]',
   // On the brand blue band: white button with ink text (19.69:1), ink text on white.
   inverse: 'bg-white text-[var(--pv-ink)] hover:bg-[var(--pv-sky)] focus-visible:outline-white',
+  // Secondary action on the brand blue band: white outline and text (5.94:1), ink on hover.
+  'outline-white': 'border border-white bg-transparent text-white hover:bg-white hover:text-[var(--pv-ink)] focus-visible:outline-white',
 } as const;
 const classes = [base, variants[variant], className];
 ---

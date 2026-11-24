@@ -5,12 +5,20 @@
 - Equipo con más de 10 años desarrollando software.
 - Trabaja con pocos clientes y en proyectos grandes, principalmente en aeropuertos de México y gobierno.
 - Por acuerdos de confidencialidad no publica el nombre de todos sus clientes; esos casos se describen sin identificar a quien los contrató.
-- Entrega por etapas: alcance por etapas, con tiempos y costo para cada una. Cada hito de pago queda ligado a una aceptación por escrito, no a una fecha del calendario.
-- En desarrollos a la medida, el código fuente y los derechos sobre el producto entregado se transfieren al cliente una vez liquidado el pago total.
 - Precios en pesos mexicanos (MXN).
+
+## Condiciones de cada desarrollo a la medida
+
+- Entrega por etapas: alcance por etapas, con tiempos y costo para cada una.
+- Cada hito de pago queda ligado a una aceptación por escrito, no a una fecha del calendario; el cliente tiene 5 días hábiles para revisar cada hito.
+- En desarrollos a la medida, el código fuente y los derechos sobre el producto entregado se transfieren al cliente una vez liquidado el pago total.
+- Garantía de 90 días naturales desde la aceptación final para corregir defectos frente al alcance aceptado.
+- Cualquier cambio al alcance se cotiza por escrito con su impacto en costo y en tiempo y se ejecuta solo con aprobación por escrito.
+- Si la información, los accesos o las aprobaciones del cliente se retrasan, las fechas se recorren día por día sin cambio en el precio.
 
 ## Servicios
 
+- [Servicios](https://www.pyramidev.com.mx/servicios): detalle de cada servicio.
 - [Desarrollo de software a la medida](https://www.pyramidev.com.mx/servicios#desarrollo-a-medida): sistemas web, móviles y de escritorio diseñados para el proceso del cliente.
 - [Sistemas para estacionamientos](https://www.pyramidev.com.mx/servicios#estacionamientos): boletos, tarifas, cobro, cortes de caja y reportes.
 - [Integración de pagos y facturación](https://www.pyramidev.com.mx/servicios#pagos): cobros con tarjeta (Getnet, BBVA) y en línea, conciliación y facturación electrónica CFDI 4.0.
@@ -21,12 +29,23 @@
 ## Productos y casos
 
 - [Casos de estudio](https://www.pyramidev.com.mx/casos): proyectos reales; los clientes no públicos se describen sin nombre.
-- Ticketax y Livilinq son productos de Pyramidev.
+- [Ticketax](https://www.pyramidev.com.mx/casos/ticketax): producto de Pyramidev para que el cliente de un estacionamiento facture su boleto con CFDI 4.0, desde un portal o por WhatsApp (https://ticketax.com).
+- [Livilinq](https://www.pyramidev.com.mx/casos/livilinq): producto de Pyramidev para administrar condominios y fraccionamientos, con panel para la administración, app para residentes y equipo de caseta (https://livilinq.com).
+- [SMAC](https://www.pyramidev.com.mx/casos/smac): sistema para una gestoría de trámites vehiculares, con portal de rastreo para el cliente final.
+- [Cobaempak](https://www.pyramidev.com.mx/casos/cobaempak): ERP a la medida para una empresa de empaques.
+- [Gestión de reportes en un estacionamiento de aeropuerto](https://www.pyramidev.com.mx/casos/operador-aeropuerto): cliente confidencial, descrito sin nombre.
 
-## Contacto
+## Empresa y contacto
 
+- [Inicio](https://www.pyramidev.com.mx/)
 - Correo: hola@pyramidev.com.mx
 - Teléfono y WhatsApp: +52 55 4535 1951
-- [Contacto](https://www.pyramidev.com.mx/contacto)
 - [Nosotros](https://www.pyramidev.com.mx/nosotros)
+- [Contacto](https://www.pyramidev.com.mx/contacto)
 - [Preguntas frecuentes](https://www.pyramidev.com.mx/#preguntas-frecuentes)
+
+## Avisos legales
+
+- [Aviso de privacidad](https://www.pyramidev.com.mx/aviso-de-privacidad)
+- [Política de cookies](https://www.pyramidev.com.mx/politica-de-cookies)
+- [Términos de uso](https://www.pyramidev.com.mx/terminos)

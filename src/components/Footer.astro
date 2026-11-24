@@ -1,5 +1,6 @@
 ---
 import Container from './Container.astro';
+import Watermark from './Watermark.astro';
 import { CONTACT, HAS_NON_ESSENTIAL, WHATSAPP_URL } from '../data/site';
 import { COMPANY } from '../data/legal';
 
@@ -15,27 +16,45 @@ const LEGAL_LINKS = [
   { label: 'Política de cookies', href: '/politica-de-cookies' },
   { label: 'Términos de uso', href: '/terminos' },
 ];
+// Pyramidev's own products (public sites).
+const PRODUCTS = [
+  { label: 'Ticketax', note: 'Autofacturación para estacionamientos', href: 'https://ticketax.com/' },
+  { label: 'Livilinq', note: 'Administración de residenciales', href: 'https://livilinq.com/' },
+];
 const link = 'text-sm text-[var(--pv-lilac)] transition-colors duration-150 hover:text-white';
 ---
 
-<footer class="border-t-4 border-navy bg-ink text-white">
-  <Container class="py-12 lg:py-16">
-    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-      <div class="lg:col-span-2">
-        <img src="/logo-dark.png" alt="Pyramidev" width="600" height="71" class="h-7 w-auto" />
-        <p class="mt-4 max-w-sm text-sm text-[var(--pv-lilac)]">
+<footer class="relative overflow-hidden border-t-4 border-navy bg-ink text-white">
+  <Watermark on="dark" class="-bottom-28 -right-24 w-[22rem] opacity-[0.08] lg:-bottom-40 lg:-right-28 lg:w-[34rem]" />
+  <Container class="relative py-14 lg:py-20">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-12">
+      <div class="sm:col-span-2 lg:col-span-4">
+        <img src="/logo-dark.png" alt="Pyramidev" width="600" height="71" class="h-7 w-auto lg:h-8" />
+        <p class="mt-5 max-w-sm text-[var(--pv-lilac)]">
           Software para operaciones críticas: estacionamientos, pagos, control de acceso y sistemas de punta a punta.
         </p>
       </div>
 
-      <nav aria-label="Secciones">
+      <nav aria-label="Secciones" class="lg:col-span-2 lg:col-start-6">
         <h2 class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Sitio</h2>
         <ul class="mt-4 space-y-2">
           {NAV_LINKS.map((l) => <li><a class={link} href={l.href}>{l.label}</a></li>)}
         </ul>
       </nav>
 
-      <div>
+      <div class="lg:col-span-2">
+        <h2 class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Productos</h2>
+        <ul class="mt-4 space-y-3">
+          {PRODUCTS.map((p) => (
+            <li>
+              <a class={link} href={p.href} target="_blank" rel="noopener">{p.label}</a>
+              <p class="text-sm text-[var(--pv-lilac)]">{p.note}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="lg:col-span-3">
         <h2 class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Contacto</h2>
         <ul class="mt-4 space-y-2">
           <li><a class={link} href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>

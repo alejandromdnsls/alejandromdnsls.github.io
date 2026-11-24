@@ -6,51 +6,58 @@ import Footer from '../components/Footer.astro';
 import Section from '../components/Section.astro';
 import { schedulerLink } from '../data/site';
 import Button from '../components/Button.astro';
-import CaseCard from '../components/CaseCard.astro';
+import CaseMockup from '../components/CaseMockup.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Faq from '../components/Faq.astro';
+import RiskReducer from '../components/RiskReducer.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import Watermark from '../components/Watermark.astro';
 import TechMarquee from '../components/TechMarquee.astro';
 import { SERVICES } from '../data/services';
+import { CASE_KIND_LABEL as kindLabel } from '../data/caseKinds';
 import { RISK_REDUCER, faqPageJsonLd } from '../data/faq';
+import { PROCESS_STEPS } from '../data/process';
+import SoftwareFactory from '../components/SoftwareFactory.astro';
 
 const featured = sortCases(await getPublishedCases((c) => c.data.featured));
 
 const headline = SERVICES.find((s) => s.headline)!;
 const specialties = SERVICES.filter((s) => !s.headline);
+const serviceTitle = (slug: string) => SERVICES.find((s) => s.slug === slug)?.title;
 
-const STEPS = [
-  { title: 'Entender', text: 'Platicamos con quienes operan el proceso hoy. Vemos cómo se hace, dónde se pierde tiempo y qué no puede fallar.' },
-  { title: 'Proponer', text: 'Te entregamos un alcance por etapas, con tiempos y costo para cada una. Empezamos por lo que más valor da.' },
-  { title: 'Construir', text: 'Entregamos por etapas, para que puedas probar cada avance con tu equipo y corregir a tiempo.' },
-  { title: 'Acompañar', text: 'Ponemos el sistema en operación, capacitamos a tu equipo y seguimos disponibles para soporte y mejoras.' },
-];
+
 ---
 
 <BaseLayout structuredData={[faqPageJsonLd()]}>
-  <Header slot="header" />
+  <Header slot="header" overDark />
 
-  <section class="bg-brand-dark relative overflow-hidden text-white">
-    <Watermark on="dark" class="-bottom-32 -right-24 w-[30rem] opacity-[0.16] sm:w-[38rem] lg:-bottom-56 lg:-right-28 lg:w-[56rem]" />
-    <div class="relative mx-auto w-full max-w-6xl px-4 pb-16 pt-20 sm:px-6 lg:px-8 lg:pb-20 lg:pt-32">
-      <p class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Desarrollo de software a la medida · CDMX</p>
-      <h1 class="text-display mt-5 max-w-4xl">Software a la medida para operaciones que no pueden detenerse.</h1>
-      <p class="mt-7 max-w-2xl text-lg text-[var(--pv-lilac)] lg:text-xl">
-        Diseñamos y construimos sistemas para tu proceso: estacionamientos, pagos, control de acceso y operación de punta a punta. Trabajamos sobre todo con aeropuertos en México y gobierno, donde cada cifra tiene que cuadrar.
-      </p>
-      <div class="mt-10 flex flex-wrap gap-3">
-        <Button {...schedulerLink} class="px-7 py-4 text-base">Agenda una llamada</Button>
-        <Button href="/casos" variant="secondary-dark" class="px-7 py-4 text-base">Ver casos de estudio</Button>
+  <section id="inicio" data-nav-dark class="bg-brand-dark relative overflow-hidden text-white">
+    <Watermark on="dark" class="-bottom-24 -right-24 w-[22rem] opacity-[0.08] sm:w-[28rem] lg:-bottom-40 lg:-right-32 lg:w-[36rem]" />
+    <div class="relative mx-auto w-full max-w-6xl px-4 pb-14 pt-32 sm:px-6 lg:px-8 lg:pb-20 lg:pt-40">
+      <div class="grid gap-14 lg:grid-cols-12 lg:items-center lg:gap-10">
+        <div class="lg:col-span-6">
+          <p class="text-xs font-medium uppercase tracking-[0.08em] text-[var(--pv-sky)]">Desarrollo de software a la medida · CDMX</p>
+          <h1 class="mt-5 text-[clamp(2.5rem,5vw,3.75rem)] leading-[1.04] tracking-[-0.03em]">Software a la medida para operaciones que no pueden detenerse.</h1>
+          <p class="mt-6 max-w-xl text-lg text-[var(--pv-lilac)]">
+            Diseñamos y construimos sistemas para tu proceso: estacionamientos, pagos, control de acceso y operación de punta a punta. Trabajamos sobre todo con aeropuertos en México y gobierno, donde cada cifra tiene que cuadrar.
+          </p>
+          <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <Button {...schedulerLink} class="px-7 py-4 text-base">Agenda una llamada</Button>
+            <Button href="/casos" variant="secondary-dark" class="px-7 py-4 text-base">Ver casos de estudio</Button>
+          </div>
+          <p data-risk-reducer class="mt-5 max-w-xl text-sm text-[var(--pv-lilac)]">{RISK_REDUCER.text}</p>
+        </div>
+        <div class="hero-rise lg:col-span-6">
+          <SoftwareFactory />
+        </div>
       </div>
-      <p data-risk-reducer class="mt-5 max-w-2xl text-sm text-[var(--pv-lilac)]">{RISK_REDUCER.text}</p>
-      <p class="mt-16 border-t border-[var(--pv-ink-line)] pt-5 text-sm font-medium text-[var(--pv-sky)] lg:mt-24">
+      <p class="mt-14 border-t border-[var(--pv-ink-line)] pt-5 text-sm font-medium text-[var(--pv-sky)] lg:mt-20">
         Aeropuertos en México <span aria-hidden="true">·</span><span class="sr-only">,</span> Gobierno <span aria-hidden="true">·</span><span class="sr-only">,</span> Estacionamientos <span aria-hidden="true">·</span><span class="sr-only">y</span> Industria
       </p>
     </div>
   </section>
 
-  <Section>
+  <Section id="servicios">
     <SectionHeader
       eyebrow="Servicios"
       title="Qué hacemos"
@@ -87,25 +94,53 @@ const STEPS = [
     </ol>
   </Section>
 
-  <Section tone="surface" size="xl" class="py-16 lg:py-20">
-    <SectionHeader eyebrow="Tecnologías" title="Herramientas probadas, explicadas sin tecnicismos" />
-    <div class="mt-10">
-      <TechMarquee />
-    </div>
-  </Section>
-
-  <Section>
+  <Section id="casos" tone="surface">
     <SectionHeader
       eyebrow="Casos de estudio"
       title="Trabajo reciente"
       lead="Por acuerdos de confidencialidad no publicamos el nombre de todos nuestros clientes. Describimos el trabajo sin identificar a quien lo contrató."
     />
-    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {featured.map((entry) => <CaseCard entry={entry} />)}
+    <div class="mt-14 space-y-16 lg:mt-16 lg:space-y-24">
+      {featured.map((entry, i) => {
+        const { title, sector, kind, summary, services, url, images } = entry.data;
+        return (
+          <article class="grid items-center gap-8 lg:grid-cols-12 lg:gap-14">
+            {images.length > 0 && (
+              <div class:list={['lg:col-span-7', i % 2 === 1 && 'lg:order-2']}>
+                <CaseMockup images={images} url={url} width={620} />
+              </div>
+            )}
+            <div class:list={[images.length > 0 ? 'lg:col-span-5' : 'lg:col-span-8']}>
+              <p class="text-xs font-medium uppercase tracking-[0.08em] text-link-base">{sector} · {kindLabel[kind]}</p>
+              <h3 class="mt-3 text-[1.75rem] leading-[1.2] tracking-[-0.015em]">{title}</h3>
+              <p class="mt-4 text-lg text-fg-muted">{summary}</p>
+              <ul class="mt-6 space-y-2 border-t border-line pt-5 text-sm">
+                {services.map((slug) => serviceTitle(slug)).filter(Boolean).map((name) => (
+                  <li class="flex gap-2">
+                    <svg class="mt-0.5 size-4 shrink-0 text-link-base" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 10.5 3.5 3.5 7.5-8" /></svg>
+                    {name}
+                  </li>
+                ))}
+              </ul>
+              <a href={`/casos/${entry.id}`} class="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-link-base underline underline-offset-4 hover:text-link-hover">
+                Ver el caso<span class="sr-only">: {title}</span>
+                <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 10h12m-5-5 5 5-5 5" /></svg>
+              </a>
+            </div>
+          </article>
+        );
+      })}
     </div>
-    <p class="mt-8">
+    <p class="mt-16 border-t border-line pt-6">
       <a href="/casos" class="text-sm font-medium text-link-base underline underline-offset-4 hover:text-link-hover">Ver todos los casos</a>
     </p>
+  </Section>
+
+  <Section size="xl" class="py-16 lg:py-20">
+    <SectionHeader eyebrow="Tecnologías" title="Herramientas probadas, explicadas sin tecnicismos" />
+    <div class="mt-10">
+      <TechMarquee />
+    </div>
   </Section>
 
   <Section tone="dark">
@@ -113,7 +148,7 @@ const STEPS = [
     <div class="relative">
       <SectionHeader eyebrow="Cómo trabajamos" title="Cuatro pasos, sin sorpresas" tone="dark" />
       <ol class="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((s, i) => (
+        {PROCESS_STEPS.map((s, i) => (
           <li class="border-t border-[var(--pv-lilac-strong)] pt-5">
             <p class="text-[2.5rem] leading-none tracking-[-0.02em] text-[var(--pv-blue-tint)]" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
             <h3 class="mt-5 text-[1.375rem] leading-[1.3]">{s.title}</h3>
@@ -124,7 +159,7 @@ const STEPS = [
     </div>
   </Section>
 
-  <Section tone="surface" size="lg">
+  <Section size="lg">
     <div class="grid gap-8 lg:grid-cols-3">
       <div class="lg:col-span-1">
         <h2 class="text-headline">Experiencia y confidencialidad</h2>
@@ -135,6 +170,8 @@ const STEPS = [
       </div>
     </div>
   </Section>
+
+  <RiskReducer />
 
   <Faq />
 

@@ -9,7 +9,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FAQ, RISK_REDUCER, TERMS_FILE, faqPageJsonLd } from './faq.ts';
+import { FAQ, RISK_ITEMS, RISK_REDUCER, TERMS_FILE, faqPageJsonLd } from './faq.ts';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const webRoot = join(here, '..', '..');
@@ -20,7 +20,12 @@ const hasTerms = existsSync(termsPath);
 const walk = (obj, path) => path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), obj);
 const has = (haystack, needle) => haystack.toLocaleLowerCase('es-MX').includes(String(needle).toLocaleLowerCase('es-MX'));
 
-const allTexts = () => [...FAQ.map((item) => ({ where: item.question, text: item.answer, facts: item.facts })), { where: 'RISK_REDUCER', ...RISK_REDUCER }];
+const allTexts = () => [
+  ...FAQ.map((item) => ({ where: item.question, text: item.answer, facts: item.facts })),
+  { where: 'RISK_REDUCER', ...RISK_REDUCER },
+  // Risk-reducer section: title and text are checked together, so a number in a title must be a declared fact too.
+  ...RISK_ITEMS.map((item) => ({ where: `RISK_ITEMS: ${item.title}`, text: `${item.title}. ${item.text}`, facts: item.facts })),
+];
 
 test('the FAQ has 6 to 8 items with distinct questions and short answers', () => {
   assert.ok(FAQ.length >= 6 && FAQ.length <= 8, `FAQ has ${FAQ.length} items`);
@@ -96,4 +101,20 @@ test('the FAQPage JSON-LD of the built home matches the rendered FAQ', () => {
   const reducer = html.match(/<p[^>]+data-risk-reducer[^>]*>([\s\S]*?)<\/p>/);
   assert.ok(reducer, 'risk-reducer line missing');
   assert.equal(stripTags(reducer[1]), RISK_REDUCER.text);
+});
+
+test('the risk-reducer section has distinct items, each with declared facts', () => {
+  assert.ok(RISK_ITEMS.length >= 4 && RISK_ITEMS.length <= 8, `RISK_ITEMS has ${RISK_ITEMS.length} items`);
+  assert.equal(new Set(RISK_ITEMS.map((i) => i.title)).size, RISK_ITEMS.length);
+  for (const item of RISK_ITEMS) assert.ok(item.facts.length > 0, `no facts for ${item.title}`);
+});
+
+test('the built home renders every risk-reducer item, in order, before the FAQ', () => {
+  const html = readFileSync(join(webRoot, 'dist', 'index.html'), 'utf8');
+  const titles = [...html.matchAll(/<[^>]+data-risk-title[^>]*>([\s\S]*?)<\/h3>/g)].map((m) => stripTags(m[1]));
+  const texts = [...html.matchAll(/<[^>]+data-risk-text[^>]*>([\s\S]*?)<\/p>/g)].map((m) => stripTags(m[1]));
+  assert.deepEqual(titles, RISK_ITEMS.map((i) => i.title));
+  assert.deepEqual(texts, RISK_ITEMS.map((i) => i.text));
+  const riskAt = html.indexOf('id="garantias"');
+  assert.ok(riskAt > 0 && riskAt < html.indexOf('id="preguntas-frecuentes"'), 'the risk-reducer section comes before the FAQ');
 });

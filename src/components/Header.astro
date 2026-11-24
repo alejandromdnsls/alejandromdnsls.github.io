@@ -1,36 +1,53 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
 import Button from './Button.astro';
-import Container from './Container.astro';
 import { schedulerLink } from '../data/site';
 
+interface Props {
+  /** The page opens with an always-dark band (`[data-nav-dark]`): the nav starts in its dark look and overlaps it. */
+  overDark?: boolean;
+  /** In-page sections shown as a second, scrollable row of the floating nav (the current one is marked while scrolling). */
+  sections?: { id: string; label: string }[];
+}
+const { overDark = false, sections = [] } = Astro.props;
+
+// `section`: id of a home block that marks this link as current while it is in view (home only).
 const NAV_LINKS = [
-  { label: 'Inicio', href: '/' },
-  { label: 'Servicios', href: '/servicios' },
-  { label: 'Casos de estudio', href: '/casos' },
+  { label: 'Inicio', href: '/', section: 'inicio' },
+  { label: 'Servicios', href: '/servicios', section: 'servicios' },
+  { label: 'Casos de estudio', href: '/casos', section: 'casos' },
   { label: 'Nosotros', href: '/nosotros' },
   { label: 'Contacto', href: '/contacto' },
 ];
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const current = path.startsWith('/casos') ? '/casos' : path;
+const isHome = path === '/';
 ---
 
-<header class="sticky top-0 z-40 border-b border-line bg-canvas">
-  <Container>
-    <div class="flex h-16 items-center justify-between lg:h-20">
-      <a href="/" class="inline-flex items-center" aria-label="Pyramidev, inicio">
-        <img src="/logo-light.png" alt="Pyramidev" width="600" height="71" class="logo-on-light h-7 w-auto lg:h-8" />
-        <img src="/logo-dark.png" alt="" width="600" height="71" class="logo-on-dark h-7 w-auto lg:h-8" aria-hidden="true" />
+<!-- Floating nav: solid shell inset from the edges (no blur). Fixed, so it overlaps the dark band that opens
+     most pages; pages that open on a light surface get a spacer of the same height. -->
+<header
+  id="site-header"
+  class:list={['site-header fixed inset-x-0 top-0 z-40 px-3 pt-3 sm:px-4 lg:pt-4 print:static', overDark && 'nav-on-dark']}
+  data-over-dark={overDark ? 'true' : undefined}
+>
+  <div class="nav-shell mx-auto w-full max-w-6xl">
+    <div class="flex h-16 items-center justify-between gap-3 pl-4 pr-2 sm:pl-5 lg:h-[4.25rem]">
+      <a href="/" class="inline-flex shrink-0 items-center" aria-label="Pyramidev, inicio">
+        <img src="/logo-light.png" alt="Pyramidev" width="600" height="71" class="logo-on-light h-6 w-auto lg:h-7" />
+        <img src="/logo-dark.png" alt="" width="600" height="71" class="logo-on-dark h-6 w-auto lg:h-7" aria-hidden="true" />
       </a>
 
       <nav aria-label="Principal" class="hidden lg:block">
-        <ul class="flex items-center gap-8">
+        <ul class="flex items-center gap-0.5">
           {NAV_LINKS.map((l) => (
             <li>
               <a
                 href={l.href}
                 aria-current={current === l.href ? 'page' : undefined}
-                class="text-sm font-medium text-fg-muted transition-colors duration-150 hover:text-fg aria-[current=page]:text-fg"
+                data-active={current === l.href ? '' : undefined}
+                data-nav-section={isHome ? l.section : undefined}
+                class="nav-tab whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-fg-muted transition-colors duration-150 hover:text-fg"
               >
                 {l.label}
               </a>
@@ -39,9 +56,9 @@ const current = path.startsWith('/casos') ? '/casos' : path;
         </ul>
       </nav>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1">
         <ThemeToggle />
-        <Button {...schedulerLink} class="max-lg:hidden">Agenda una llamada</Button>
+        <Button {...schedulerLink} class="ml-1 max-lg:hidden">Agenda una llamada</Button>
         <button
           type="button"
           id="menu-toggle"
@@ -51,17 +68,29 @@ const current = path.startsWith('/casos') ? '/casos' : path;
           aria-label="Abrir menú"
         >
           <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
-            <path id="menu-open" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
+            <path id="menu-open" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h10" />
             <path id="menu-close" class="hidden" stroke-linecap="round" d="M6 6l12 12M18 6 6 18" />
           </svg>
         </button>
       </div>
     </div>
-  </Container>
 
-  <div id="mobile-menu" class="hidden border-t border-line bg-canvas lg:hidden">
-    <Container>
-      <nav aria-label="Principal móvil" class="py-4">
+    {sections.length > 0 && (
+      <nav aria-label="Secciones de esta página" class="border-t border-line">
+        <ul class="nav-sections flex gap-0.5 overflow-x-auto px-2 py-1.5">
+          {sections.map((s) => (
+            <li class="shrink-0">
+              <a href={`#${s.id}`} data-nav-section={s.id} class="nav-tab block whitespace-nowrap rounded-md px-3 py-2 text-sm text-fg-muted transition-colors duration-150 hover:text-fg">
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <div id="mobile-menu" class="hidden border-t border-line lg:hidden">
+      <nav aria-label="Principal móvil" class="px-4 pb-4 pt-2">
         <ul class="flex flex-col">
           {NAV_LINKS.map((l) => (
             <li>
@@ -75,13 +104,64 @@ const current = path.startsWith('/casos') ? '/casos' : path;
             </li>
           ))}
         </ul>
-        <Button {...schedulerLink} class="mt-4 w-full">Agenda una llamada</Button>
+        <Button {...schedulerLink} class="mt-3 w-full">Agenda una llamada</Button>
       </nav>
-    </Container>
+    </div>
   </div>
 </header>
+{!overDark && <div aria-hidden="true" class:list={['print:hidden', sections.length > 0 ? 'h-[8.5rem] lg:h-36' : 'h-[4.75rem] lg:h-[5.25rem]']}></div>}
 
 <script>
+  const header = document.getElementById('site-header');
+  const darkBand = document.querySelector<HTMLElement>('[data-nav-dark]');
+  const io = 'IntersectionObserver' in window;
+
+  // Dark look while the opening dark band is under the nav; surface and shadow past it.
+  // No layout reads: the markup already starts in the right state and the observer's first callback settles it.
+  if (header && header.dataset.overDark === 'true' && darkBand && io) {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let observer: IntersectionObserver | null = null;
+    const watch = () => {
+      observer?.disconnect();
+      const navBottom = desktop.matches ? 84 : 76;
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          header.classList.toggle('nav-on-dark', entry.isIntersecting);
+          header.classList.toggle('is-surfaced', !entry.isIntersecting);
+        },
+        { rootMargin: `-${navBottom}px 0px 0px 0px`, threshold: 0 },
+      );
+      observer.observe(darkBand);
+    };
+    watch();
+    desktop.addEventListener('change', watch);
+  } else if (header) {
+    const update = () => header.classList.toggle('is-surfaced', window.scrollY > 8);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+  }
+
+  // Current section: links with data-nav-section are marked while their block crosses the middle of the viewport.
+  // Every top-level block is watched, so a block without a link clears the mark.
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-nav-section]'));
+  if (links.length > 0 && io) {
+    const ids = new Set(links.map((l) => l.dataset.navSection));
+    const targets = Array.from(document.querySelectorAll<HTMLElement>('#contenido > section, #contenido > header, #contenido [id]')).filter(
+      (el) => el.parentElement?.id === 'contenido' || ids.has(el.id),
+    );
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = entry.target.id;
+          links.forEach((link) => link.toggleAttribute('data-active', id !== '' && link.dataset.navSection === id));
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px', threshold: 0 },
+    );
+    targets.forEach((el) => sectionObserver.observe(el));
+  }
+
   const btn = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
   const openIcon = document.getElementById('menu-open');

@@ -26,6 +26,10 @@ export default defineConfig({
   // Astro 7 defaults to JSX whitespace rules ('jsx'), which drops spaces between
   // inline elements; keep the v6 lossless compression so the copy renders the same.
   compressHTML: true,
+  // Inline every stylesheet: the CSS is small and a separate file is a render-blocking request on
+  // the critical path. GitHub Pages cannot set long cache headers, so one request less matters more
+  // than caching a shared CSS file across pages.
+  build: { inlineStylesheets: 'always' },
   // Astro 7 renders Markdown with Satteri by default; keep the remark/rehype
   // pipeline so the comment-stripping plugin keeps running unchanged.
   markdown: { processor: unified({ rehypePlugins: [rehypeStripComments] }) },

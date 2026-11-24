@@ -34,7 +34,7 @@ const servicesJsonLd = SERVICES.map((s) => ({
   description="Software para estacionamientos, pagos y facturación CFDI 4.0, quioscos y control de acceso, gestión de reportes y sistemas de operación de punta a punta."
   structuredData={servicesJsonLd}
 >
-  <Header slot="header" />
+  <Header slot="header" overDark sections={SERVICES.map((s) => ({ id: s.slug, label: s.navLabel }))} />
 
   <PageHeader
     eyebrow="Servicios"
